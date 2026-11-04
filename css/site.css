@@ -1,0 +1,24 @@
+/* Batter & Dough: shared tokens, nav, pills and footer. Loaded first on every page. */
+:root {
+  --cream:#FFF9F3; --paper:#FBF1E6; --blush:#F7CFD6; --mint:#CDEBDC; --butter:#FAEBB4;
+  --cocoa:#5A2E1C; --choc:#3B1F14; --pink:#E98A9A; --mist:#9A7B6A;
+  --head:"Fraunces", Georgia, serif; --body:"Nunito", system-ui, sans-serif; --script:"Caveat", cursive;
+  --glass: rgba(255,249,243,.72); --glass-border: rgba(90,46,28,.14);
+}
+* { box-sizing:border-box; }
+a { color:inherit; }
+button { font:inherit; color:inherit; cursor:pointer; background:none; border:0; padding:0; }
+em { font-family:var(--head); font-style:italic; font-weight:500; }
+.grain { position:fixed; inset:0; pointer-events:none; z-index:70; opacity:.06; mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .36 0 0 0 0 .2 0 0 0 0 .1 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E"); }
+.wm { font-family:var(--script); font-weight:700; font-size:28px; line-height:1; display:flex; align-items:center; gap:4px; text-decoration:none; }
+.wm svg { width:14px; height:14px; }
+.links { display:flex; gap:26px; list-style:none; margin:0; padding:0; }
+.links a { text-decoration:none; font-weight:700; font-size:14px; }
+.pill { display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:11px 18px; border-radius:999px; font-weight:800; font-size:14px; text-decoration:none; border:0; cursor:pointer; font-family:var(--body); }
+.pill.pri { background:var(--cocoa); color:var(--cream); }
+.pill.wa { background:var(--cocoa); color:var(--cream); }
+footer a { color:var(--cream); text-decoration:none; }
+footer h4 { margin:0 0 8px; font-weight:800; font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--blush); }
+footer .fb { font-family:var(--script); font-weight:700; font-size:30px; line-height:1; margin-bottom:8px; }
+footer .copy { grid-column:1/-1; display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; padding-top:16px; border-top:1px solid rgba(255,249,243,.15); font-size:12px; opacity:.8; }

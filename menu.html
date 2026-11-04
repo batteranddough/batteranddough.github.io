@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Batter &amp; Dough · Menu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;0,9..144,900;1,9..144,500&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/site.css">
+<link rel="stylesheet" href="css/menu.css">
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+
+<nav class="nav" aria-label="Main">
+  <a class="wm" href="index.html">Batter &amp; Dough <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 17 C4 12 1 9 1 6 a4 4 0 0 1 8-1 a4 4 0 0 1 8 1 c0 3-3 6-7 11z" fill="#E98A9A"/></svg></a>
+  <ul class="links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="#footer">Contact</a></li>
+  </ul>
+  <a class="pill wa" href="https://wa.me/918999650554" target="_blank" rel="noopener">Order on WhatsApp</a>
+</nav>
+
+<header class="mhero">
+  <img src="photos/doughy-menu-sm.webp" width="360" height="329" alt="">
+  <div>
+    <h1>The whole menu, <em>both ways.</em></h1>
+    <p>Every bake comes eggless or with egg. Pick a category, pick a box size, then tell us on WhatsApp what you'd like and when. Please order a day ahead.</p>
+    <span class="bub">Doughy says: start with the cookies.</span>
+  </div>
+</header>
+
+<div class="bar" id="bar">
+  <div class="chips" id="chips"></div>
+  <div class="seg" role="group" aria-label="Egg preference"><button class="on" data-e="0" type="button" aria-label="Eggless" title="Eggless"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8c-3.4 0-6.6 5-6.6 10a6.6 6.6 0 0 0 13.2 0c0-5-3.2-10-6.6-10z" fill="currentColor" opacity=".18"/><path d="M12 2.8c-3.4 0-6.6 5-6.6 10a6.6 6.6 0 0 0 13.2 0c0-5-3.2-10-6.6-10z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M5 19.5 19 4.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button><button data-e="1" type="button" aria-label="With egg" title="With egg"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8c-3.4 0-6.6 5-6.6 10a6.6 6.6 0 0 0 13.2 0c0-5-3.2-10-6.6-10z" fill="currentColor" opacity=".18"/><path d="M12 2.8c-3.4 0-6.6 5-6.6 10a6.6 6.6 0 0 0 13.2 0c0-5-3.2-10-6.6-10z" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="13.6" r="2.6" fill="currentColor"/></svg></button></div>
+</div>
+
+<main id="menu"></main>
+
+<footer id="footer">
+  <div>
+    <div class="fb">Batter &amp; Dough ♥</div>
+    <p style="margin:0;max-width:36ch">A home bakery in Solapur, Maharashtra. Small batches, baked the morning you order.</p>
+  </div>
+  <div><h4>Order</h4><div><a href="https://wa.me/918999650554">WhatsApp +91 89996 50554</a><br>Delivery anywhere in Solapur</div></div>
+  <div><h4>Follow</h4><div><a href="https://www.instagram.com/batter_._dough/" target="_blank" rel="noopener">Instagram @batter_._dough</a><br><a href="index.html">Back to the kitchen</a></div></div>
+  <div class="copy"><span>© Batter &amp; Dough</span><span>Prices as of 4 Nov 2026.</span></div>
+</footer>
+
+<div class="orderbar"><a class="pill wa" href="https://wa.me/918999650554?text=Hi%20Batter%20%26%20Dough!%20I'd%20like%20to%20order..." target="_blank" rel="noopener">Order on WhatsApp</a></div>
+
+<div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Photo"><button type="button" class="lbx" id="lbx" aria-label="Close">&#x2715;</button><div class="lbs" id="lbs"></div><p class="lbc" id="lbc"></p></div>
+
+<script src="js/menu-data.js"></script>
+<script src="js/menu.js"></script>
+</body>
+</html>
