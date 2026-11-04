@@ -6,7 +6,9 @@ confirmed or replaced it. Keep adding to this list during the build.
 
 ## Prices and menu (from the "Menu Draft" supplied 2026-11-04)
 
-The menu now lives in one place, `menu-data.js`, and every page reads from it.
+The menu lives in one place, `js/menu-data.js`, and both pages read from it:
+the menu page builds itself from it, and the home page takes its three
+"from ₹" lines (cards, featuring panel, Doughy's chalkboard) from it.
 The size table in the draft wins over the single prices at the top of the list
 whenever they differ (owner rule: price draft wins).
 
@@ -46,8 +48,9 @@ whenever they differ (owner rule: price draft wins).
 
 ## Contact and ordering
 
-- [ ] **Notice period**: "Please order a day ahead" appears on the home page
-      and the menu page. Builder's default.
+- [ ] **Notice period**: the menu page says "Please order a day ahead"; the
+      home page and both footers say "baked the morning you order". Builder's
+      defaults; pick one wording if they should match.
 - [ ] **Delivery area**: "Anywhere in Solapur" as supplied; confirm whether
       there is a delivery charge or a minimum order.
 - [ ] **WhatsApp number** +91 89996 50554 as supplied; confirm it is the
@@ -60,9 +63,9 @@ whenever they differ (owner rule: price draft wins).
 
 ## Copy
 
-- [ ] **About section**: generic placeholder text written by the builder.
-      Replace with the sister's own words, and decide whether to use her name.
-- [ ] **Tagline under the wordmark**: builder's draft.
+- [ ] **Menu card on the home page** ("Doughy will show you the menu." and the
+      line under it) and the three fact chips (100% baked at home, 2 ways,
+      Solapur delivered citywide): builder's drafts.
 - [ ] **Journey copy** (hero lines, "Three to start with. Doughy's
       favourites.", the three featured facts per category): builder's drafts.
 - [ ] **Doughy's spoken lines** (typed into a speech bubble by his head; all
@@ -87,7 +90,8 @@ whenever they differ (owner rule: price draft wins).
 - [x] **Doughy's look**: owner chose **C, "Storybook"** (toon shading, cocoa
       outline, arc eyes, open smile) on 2026-11-04. It is now the default. The
       options page has since been deleted; the other looks are still reachable
-      by adding ?doughy=A, B or D to the prototype URL.
+      by adding ?doughy=A, B or D to the site address (a leftover switch the
+      builder can remove).
 - [ ] **Recipe-step chip** in the journey (Mix, Roll, Bake 180, Box):
       wording and the 180 degrees are builder's guesses.
 - [ ] **Placeholder for items without a photo**: Doughy holding a sign that
@@ -138,10 +142,12 @@ whenever they differ (owner rule: price draft wins).
       product cards sit on the bottom edge so the bakes stay visible. Builder's
       fix, not in the prototype.
 - [ ] **Reduced motion**: visitors with "reduce motion" on get a stacked
-      static page (kitchen still, text below, cards as links). No speech
-      bubble there.
-- [ ] **No WebGL** (old or locked-down phones): a still poster of the kitchen
-      with the same text; the rest of the page works.
+      still page (one frame of the kitchen, text below, cards as links). No
+      speech bubble there, and Doughy does not idle.
+- [ ] **When the kitchen cannot run** (no WebGL on old or locked-down phones,
+      browsers older than Safari 16.4 or Chrome 89, or the three.js file not
+      arriving): the same still page with a poster of the kitchen in place of
+      the frame. Nothing pins; the rest of the page works.
 - [ ] **404 page**: Doughy pointing, "Nothing's baking here.", links home and
       to the menu. Copy is the builder's.
 - [ ] **Share preview** (WhatsApp, Instagram DMs): title "Batter & Dough ·
