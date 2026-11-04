@@ -23,7 +23,7 @@ body { background:var(--cream); color:var(--cocoa); font:400 16px/1.5 var(--body
 .headline .line { display:block; white-space:nowrap; }
 .headline .ch { display:inline-block; will-change:transform, opacity; }
 .headline .heart { color:var(--pink); font-size:.5em; vertical-align:top; }
-.kicker .short { display:none; }
+.kicker .short, .kicker .still { display:none; }
 .kicker { position:absolute; left:4vw; top:14vh; margin:0; max-width:26ch; font-family:var(--head); font-style:italic; font-size:clamp(18px, 1.6vw, 26px); line-height:1.35; color:var(--cocoa); text-shadow:0 1px 0 rgba(255,249,243,.6), 0 0 18px rgba(255,249,243,.8); animation:fadeup .7s ease-out 1s backwards; }
 .rstack { position:absolute; right:3vw; top:50%; transform:translateY(-50%); display:grid; gap:10px; }
 .ritem { display:flex; align-items:center; gap:12px; width:200px; padding:11px 12px; border-radius:14px; text-decoration:none; font-weight:700; font-size:14px; }
@@ -91,8 +91,9 @@ body.static .stage .vignette { display:none; }
 body.static .layer { position:relative; inset:auto; padding:22px 4vw; display:grid; gap:18px; }
 body.static .layer > * { position:static !important; transform:none !important; opacity:1 !important; animation:none !important; }
 body.static .scrollbtn, body.static .counter, body.static .steps, body.static .say, body.static .l2, body.static .l3, body.static .l4 { display:none; }
+body.static .kicker .long, body.static .kicker .short { display:none; } body.static .kicker .still { display:inline; }
 body.no-webgl .stage canvas { display:none; }
-body.no-webgl .stage { background:#E9D3B8 url(../img/kitchen-poster.jpg) center / cover no-repeat; }
+body.no-webgl .stage::before { content:""; display:block; height:60vh; background:#E9D3B8 url(../img/kitchen-poster.jpg) center / cover no-repeat; }
 /* ---------- from the kitchen: a short teaser; the one menu lives on menu.html ---------- */
 .teaser { position:relative; padding:56px 0 56px; background:var(--cream); overflow:hidden; }
 .facts { display:flex; gap:10px; flex-wrap:wrap; margin:0; padding:0 4vw; list-style:none; }

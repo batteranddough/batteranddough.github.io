@@ -8,8 +8,8 @@ const TAU = Math.PI * 2;
 const pop = (a, b, x) => { const t = clamp01((x - a) / (b - a)); return t === 0 ? 0 : t === 1 ? 1 : 1 + Math.pow(2, -10 * t) * Math.sin((t * 10 - 0.75) * (TAU / 3)); };
 const wrapAngle = a => Math.atan2(Math.sin(a), Math.cos(a));
 
-function hasWebGL() { try { const c = document.createElement('canvas'); return !!(c.getContext('webgl2') || c.getContext('webgl')); } catch (e) { return false; } }
-if (!hasWebGL()) { document.body.classList.add('no-webgl'); throw new Error('WebGL unavailable'); }
+// js/home.js decides whether the kitchen can run (WebGL, import maps) and marks the body when it cannot
+if (document.body.classList.contains('no-webgl')) throw new Error('WebGL unavailable');
 
 const phone = window.innerWidth < 700;
 const SHADOW = phone ? 1024 : 2048;
@@ -141,9 +141,9 @@ function makeBoard(redrawList) {
   const text = (s, x, y, size, col) => items.push({ type: 'text', s, x, y, size, color: col, w: s.length * size * 0.42 + 10 });
   text("Today's batch", 70, 110, 78, INK.w);
   path([[72, 136], [620, 130], [900, 138]], INK.p, 7);
-  text('Bombolone', 90, 240, 66, INK.w); text('box of 3 · ₹81', 560, 240, 50, INK.y);
-  text('Cookies', 90, 340, 66, INK.w); text('box of 4 · ₹108', 560, 340, 50, INK.y);
-  text('Cinnamon rolls', 90, 440, 66, INK.w); text('box of 4 · ₹155', 560, 440, 50, INK.y);
+  text('Bombolone', 90, 240, 66, INK.w); text(F.from[0].line, 560, 240, 50, INK.y);
+  text('Cookies', 90, 340, 66, INK.w); text(F.from[1].line, 560, 340, 50, INK.y);
+  text('Cinnamon rolls', 90, 440, 66, INK.w); text(F.from[2].line, 560, 440, 50, INK.y);
   text('eggless or egg, always', 90, 550, 54, INK.m);
   path([[840, 540], [820, 520], [826, 498], [846, 500], [860, 516], [874, 500], [894, 498], [900, 520], [880, 540], [860, 560], [840, 540]], INK.p, 8);
   const total = items.reduce((s, it) => s + it.w, 0);
@@ -721,7 +721,7 @@ function applyCam(shot, px, py, back) {
 const TRACK = [[0.18, 0.20, 0.25, 0.27], [0.40, 0.42, 0.455, 0.47], [0.60, 0.62, 0.655, 0.67], [0.85, 0.87, 0.89, 0.905]];
 function trackK(hp) { let k = 0; for (const [a, b, c, d] of TRACK) k = Math.max(k, smooth(a, b, hp) * (1 - smooth(c, d, hp))); return k; }
 
-Promise.race([
+const fontsLoaded = Promise.race([
   Promise.all([document.fonts.load('700 60px "Caveat"'), document.fonts.load('900 190px "Fraunces"')]),
   new Promise(r => setTimeout(r, 2500))
 ]).then(() => kitchen.redrawText()).catch(() => {});
@@ -729,25 +729,31 @@ Promise.race([
 const pointer = { x: 0, y: 0, sx: 0, sy: 0 };
 window.addEventListener('pointermove', e => { pointer.x = (e.clientX / window.innerWidth) * 2 - 1; pointer.y = (e.clientY / window.innerHeight) * 2 - 1; }, { passive: true });
 
+function draw(t) {
+  const par = F.reduce ? 0 : 1;
+  const p = F.reduce ? 0 : F.s;
+  const { hp, q } = F.split(p);
+  const shot = F.dbgCam || seq(KEYS, p);
+  const k = q > 0 ? 0 : trackK(hp) * 0.75;
+  if (k > 0) { const d = kitchen.doughy.position; shot.tgt = [lerp(shot.tgt[0], d.x, k), lerp(shot.tgt[1], d.y + 0.05, k), lerp(shot.tgt[2], d.z, k)]; }
+  if (q > 0 && portrait > 1) { shot.tgt = [shot.tgt[0] + 0.2, shot.tgt[1], shot.tgt[2]]; shot.pos = [shot.pos[0] + 0.08, shot.pos[1], shot.pos[2]]; } // portrait: keep Doughy in the night close-ups
+  applyCam(shot, pointer.sx * 0.15 * par, -pointer.sy * 0.1 * par, portrait);
+  kitchen.story(p, t, cam);
+  renderer.render(kitchen.scene, cam);
+  if (!ready) { ready = true; canvas.classList.add('ready'); }
+}
 let last = performance.now(), slowFrames = 0, degraded = false, ready = false;
 function frame(now) {
   const dt = Math.min(0.05, (now - last) / 1000); last = now;
   const t = now / 1000;
   if (!degraded && t > 3) { slowFrames = dt > 0.04 ? slowFrames + 1 : Math.max(0, slowFrames - 1); if (slowFrames > 45) { degraded = true; renderer.setPixelRatio(1); renderer.shadowMap.type = THREE.PCFShadowMap; renderer.shadowMap.needsUpdate = true; resize(); } }
   pointer.sx += (pointer.x - pointer.sx) * 0.06; pointer.sy += (pointer.y - pointer.sy) * 0.06;
-  const par = F.reduce ? 0 : 1;
-  if (F.visible) {
-    const p = F.reduce ? 0 : F.s;
-    const { hp, q } = F.split(p);
-    const shot = F.dbgCam || seq(KEYS, p);
-    const k = q > 0 ? 0 : trackK(hp) * 0.75;
-    if (k > 0) { const d = kitchen.doughy.position; shot.tgt = [lerp(shot.tgt[0], d.x, k), lerp(shot.tgt[1], d.y + 0.05, k), lerp(shot.tgt[2], d.z, k)]; }
-    if (q > 0 && portrait > 1) { shot.tgt = [shot.tgt[0] + 0.2, shot.tgt[1], shot.tgt[2]]; shot.pos = [shot.pos[0] + 0.08, shot.pos[1], shot.pos[2]]; } // portrait: keep Doughy in the night close-ups
-    applyCam(shot, pointer.sx * 0.15 * par, -pointer.sy * 0.1 * par, portrait);
-    kitchen.story(p, t, cam);
-    renderer.render(kitchen.scene, cam);
-    if (!ready) { ready = true; canvas.classList.add('ready'); }
-  }
+  if (F.visible) draw(t);
   requestAnimationFrame(frame);
 }
-requestAnimationFrame(frame);
+if (F.reduce) {
+  // reduced motion: one still frame, drawn again only when the fonts arrive or the viewport changes
+  const still = () => draw(0);
+  still(); fontsLoaded.then(still);
+  window.addEventListener('resize', still);
+} else requestAnimationFrame(frame);

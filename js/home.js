@@ -3,11 +3,17 @@
   var lerp = function (a, b, t) { return a + (b - a) * t; };
   var smooth = function (a, b, x) { var t = clamp01((x - a) / (b - a)); return t * t * (3 - 2 * t); };
 
-  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // the page decides here, before the pin exists, whether the kitchen can run at all (WebGL and import maps);
+  // when it cannot, the journey is a still page: no pin, the kitchen poster, the same text
+  function hasWebGL() { try { var c = document.createElement('canvas'); return !!(c.getContext('webgl2') || c.getContext('webgl')); } catch (e) { return false; } }
+  var canRun = hasWebGL() && !!(window.HTMLScriptElement && HTMLScriptElement.supports && HTMLScriptElement.supports('importmap'));
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches || !canRun;
   var narrow = window.innerWidth < 900;
   var body = document.body;
+  if (!canRun) body.classList.add('no-webgl');
   if (reduce) body.classList.add('static');
-  if (narrow) body.classList.add('narrow');
+  function setNarrow() { narrow = window.innerWidth < 900; if (F) F.narrow = narrow; body.classList.toggle('narrow', narrow); }
+  setNarrow(); window.addEventListener('resize', setNarrow);
 
   // the day is the first 62% of the scroll, the night showcase the rest
   var DAY = 0.62, Q0 = 0.12, QL = 0.3;
@@ -75,6 +81,14 @@
 
   }
 
+  // the kitchen module could not load (its bundle failed to fetch): fall back to the still page
+  F.fail = function () {
+    if (body.classList.contains('no-webgl')) return;
+    body.classList.add('no-webgl', 'static'); reduce = true; F.reduce = true;
+    if (F.st) { F.st.kill(true); F.st = null; }
+    nav.classList.add('solid');
+  };
+
   // ---------- Doughy's lines: typed into a bubble by his head while he holds at each station ----------
   // day lines run on hp; night lines run on q, or on u inside one showcase segment (k)
   var SAYS = [
@@ -112,12 +126,20 @@
 
   // ---------- the night overlay ----------
   var PRODUCTS = [
-    { name: 'Chocolate Bombolone', tag: 'Pillowy, filled to the brim', price: 'from ₹81', unit: '· box of 3 · eggless', feats: ['Fried fresh, rolled in sugar', 'Chocolate or crème brûlée filling', 'Boxes of 3 and 6'] },
-    { name: 'Cookies', tag: 'Crisp edge, gooey middle', price: 'from ₹108', unit: '· box of 4 · eggless', feats: ['Double chocolate chip, toffee, brownie', 'Boxes of 4, 6 and 8', 'Baked the morning you order'] },
-    { name: 'Cinnamon rolls', tag: 'Soft, sticky, still warm', price: 'from ₹155', unit: '· box of 4 · eggless', feats: ['Classic or chocolate', 'Cream cheese glaze', 'Boxes of 4, 6 and 8'] }
+    { name: 'Chocolate Bombolone', tag: 'Pillowy, filled to the brim', price: '', unit: '', feats: ['Fried fresh, rolled in sugar', 'Chocolate or crème brûlée filling', 'Boxes of 3 and 6'] },
+    { name: 'Cookies', tag: 'Crisp edge, gooey middle', price: '', unit: '', feats: ['Double chocolate chip, toffee, brownie', 'Boxes of 4, 6 and 8', 'Baked the morning you order'] },
+    { name: 'Cinnamon rolls', tag: 'Soft, sticky, still warm', price: '', unit: '', feats: ['Classic or chocolate', 'Cream cheese glaze', 'Boxes of 4, 6 and 8'] }
   ];
+  // the "from ₹" lines come from js/menu-data.js, the one place prices live (cards, featuring panel, and the chalkboard in the kitchen)
+  var MD = window.MENU_DATA;
+  F.from = ['bombolone', 'cookies', 'rolls'].map(function (id) {
+    var c = MD.categories.filter(function (c) { return c.id === id; })[0], size = c.sizes[0].toLowerCase(), price = MD.fromPrice(c);
+    return { price: 'from ₹' + price, unit: '· ' + size + ' · eggless', line: size + ' · ₹' + price };
+  });
+  PRODUCTS.forEach(function (P, k) { P.price = F.from[k].price; P.unit = F.from[k].unit; });
   var cardsEl = document.getElementById('cards'), featEl = document.getElementById('featuring'), counterEl = document.getElementById('counter');
   var cardEls = cardsEl.querySelectorAll('.pcard');
+  Array.prototype.forEach.call(cardEls, function (c, k) { c.querySelector(':scope > div > span').textContent = F.from[k].price + ' ' + F.from[k].unit.replace(/ · eggless$/, ''); });
   function setActiveProduct(k) {
     F.activeK = k; var P = PRODUCTS[k];
     Array.prototype.forEach.call(cardEls, function (c, i) { c.classList.toggle('active', i === k); });
@@ -127,6 +149,7 @@
     document.getElementById('f-link').href = 'menu.html#' + ['bombolone', 'cookies', 'rolls'][k];
     counterEl.textContent = '0' + (k + 1) + ' / 03';
   }
+  setActiveProduct(0);
   function updateNightOverlay(q) {
     var sg = F.segment(q), k = sg.k, u = sg.u;
     if (k !== F.activeK) setActiveProduct(k);

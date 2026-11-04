@@ -44,7 +44,7 @@
     <div class="steps glass" id="steps" role="status" aria-label="Recipe step">
       <span data-s="0"><i></i>Mix</span><span data-s="1"><i></i>Roll</span><span data-s="2" data-t=" 180°"><i></i><b class="dial" style="--k:0"></b>Bake</span><span data-s="3"><i></i>Box</span>
     </div>
-    <p class="kicker" id="kicker"><span class="long">A home bakery in Solapur. <em>This is Doughy, our baker.</em> Scroll, and watch the morning's batch happen.</span><span class="short"><em>This is Doughy, our baker.</em> Scroll to watch him&nbsp;bake&nbsp;↓</span></p>
+    <p class="kicker" id="kicker"><span class="long">A home bakery in Solapur. <em>This is Doughy, our baker.</em> Scroll, and watch the morning's batch happen.</span><span class="short"><em>This is Doughy, our baker.</em> Scroll to watch him&nbsp;bake&nbsp;↓</span><span class="still">A home bakery in Solapur. <em>This is Doughy, our baker.</em></span></p>
     <h1 class="headline" id="headline"><span class="line">Batter &amp;</span><span class="line">Dough <span class="heart">♥</span></span></h1>
     <div id="l1extras" style="position:absolute;inset:0;pointer-events:none">
       <aside class="rstack" aria-label="Quick menu" style="pointer-events:auto">
@@ -115,6 +115,6 @@
 <script type="importmap">
 { "imports": { "three": "./vendor/three/three.module.min.js" } }
 </script>
-<script type="module" src="js/kitchen.js"></script>
+<script type="module" src="js/kitchen.js" onerror="window.BD && BD.fail()"></script>
 </body>
 </html>
