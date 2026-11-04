@@ -90,9 +90,9 @@ body.static .stage canvas { position:relative; height:60vh; }
 body.static .stage .vignette { display:none; }
 body.static .layer { position:relative; inset:auto; padding:22px 4vw; display:grid; gap:18px; }
 body.static .layer > * { position:static !important; transform:none !important; opacity:1 !important; animation:none !important; }
-body.static .scrollbtn, body.static .counter, body.static .steps { display:none; }
+body.static .scrollbtn, body.static .counter, body.static .steps, body.static .say, body.static .l2, body.static .l3, body.static .l4 { display:none; }
 body.no-webgl .stage canvas { display:none; }
-body.no-webgl .stage { background:linear-gradient(180deg, #F3E3D2, #E9D3B8); }
+body.no-webgl .stage { background:#E9D3B8 url(../img/kitchen-poster.jpg) center / cover no-repeat; }
 /* ---------- from the kitchen: a short teaser; the one menu lives on menu.html ---------- */
 .teaser { position:relative; padding:56px 0 56px; background:var(--cream); overflow:hidden; }
 .facts { display:flex; gap:10px; flex-wrap:wrap; margin:0; padding:0 4vw; list-style:none; }
@@ -112,3 +112,8 @@ body.no-webgl .stage { background:linear-gradient(180deg, #F3E3D2, #E9D3B8); }
 footer { padding:44px 4vw 40px; background:var(--cocoa); color:var(--paper); display:grid; grid-template-columns:1.2fr 1fr 1fr; gap:28px; font-size:14px; line-height:1.6; }
 @media (max-width:760px) { footer { grid-template-columns:1fr; } }
 @media (prefers-reduced-motion:reduce) { .scrollbtn svg { animation:none; } }
+/* short landscape phones: the night bar and cards hug the bottom edge so the bakes stay visible */
+@media (max-width:900px) and (max-height:420px) {
+  .featuring { bottom:10px; }
+  .cards { bottom:10px; }
+}
