@@ -55,7 +55,13 @@ Anti-goals (a failure even if it "works")
   `batteranddough/batteranddough.github.io` (GitHub organization
   `batteranddough`, created by the owner). Public URL:
   `https://batteranddough.github.io`. The repository must be public for Pages
-  on the free plan.
+  on the free plan. As of 2026-11-04 the repository exists, is empty, and is
+  private; it has to be switched to public before Pages can be enabled.
+- Accounts: everything in this project uses the owner's personal GitHub
+  account `AmaanKhan63` (sole owner of the org), never the work account. The
+  local remote uses the SSH alias `github.com-amaan`, which maps to the
+  personal key. Commits are authored as AmaanKhan63 via the personal
+  gitconfig include.
 - Audience is mostly on phones, some on laptops. Design for a 360×640 viewport
   first, then widen. Everything must work at 320px wide and at 1440px wide.
 - No build step. Files are hand-written and pushed. No Node toolchain is
@@ -251,9 +257,15 @@ until told otherwise:
 - Brownie cookies are priced higher eggless than egg (322 vs 314) in both
   places in her draft. Transcribed as written.
 - The printed menu shows the Overjoy combo with 2 Biscoff cookies as well
-  (8 cookies). The price draft computes it for 6 cookies without Biscoff.
-  The 6-cookie version is used because that is what the price was computed
-  for.
+  (8 cookies). The price draft computes it for 6 cookies without Biscoff:
+  2 × (40 + 27 + 30) = 194, plus 86 = 280 eggless. The 6-cookie version is
+  used because that is what the arithmetic covers. Pending the owner's
+  answer (section 14).
+- Both combos include a flat ₹86 that her draft labels "added charges"
+  (Blissful: 3 × (27 + 35) = 186, plus 86 = 272 eggless). It is part of the
+  price, not a mistake. What it buys (a gift box, packing) is not stated, so
+  the combo cards say nothing about it until the owner confirms (section 14).
+  If it is a gift box, the card gets a "comes in a gift box" line.
 - Customised items carry the ₹1000 placeholder and a "Customised" tag so
   the number reads as a starting point. The row's add button still works.
 - Her notes about packing charges and per-unit costs are internal and are not
@@ -291,6 +303,12 @@ Delivery address or pickup:
 
 - The eggless/egg switch applies to the whole order; a customer who wants a
   mix edits the message in WhatsApp.
+- Placeholder-priced items (the ₹1000 ones) count toward the total at ₹1000,
+  as the owner asked, but their line in the message ends with
+  "(price to be confirmed)" and, when any such item is present, the total line
+  reads "Total: ₹X (some prices to be confirmed)". The floating pill shows the
+  plain total. Builder's call, so the sister never receives a ₹1000 line as if
+  it were a real quote.
 - The pill has a "clear" action. Counts are kept only in memory; a reload
   starts fresh.
 - The "Order on WhatsApp" buttons elsewhere open the chat with a short
@@ -392,6 +410,10 @@ Placeholders are used until these arrive; none of them changes the build.
 - What the croissant-style pastries in the photos are (they are not on the
   menu). If they are a product, their name and price.
 - Real prices for the four ₹1000 placeholder items.
+- Overjoy combo contents: 6 cookies without Biscoff (price draft) or 8 with
+  Biscoff (printed menu).
+- What the ₹86 "added charges" in both combos covers, so the combo card can
+  say so if it is a gift box.
 
 ## 15. Left to the builder
 
@@ -406,9 +428,21 @@ Placeholders are used until these arrive; none of them changes the build.
 
 ## 16. Process notes
 
+- The owner is reachable between working sessions, not during them. Review
+  gates mean "stop at the end of that deliverable and show it", not "block
+  everything".
 - The first deliverable is Doughy alone on a page, with idle animation and one
-  transformation (cookie), shown to the owner before the rest is built.
-- Second deliverable is the menu and order builder, because that is the part
-  the bakery cannot launch without.
-- Third is the full journey. Fourth is gallery, about, order, polish and the
-  mobile device pass.
+  transformation (cookie), shown to the owner. While that review is pending,
+  the menu and order builder can be built, because they do not depend on
+  Doughy's look.
+- The menu and order builder are the second deliverable, because that is the
+  part the bakery cannot launch without.
+- The full journey is built only after Doughy's look is approved. Fourth is
+  gallery, about, order, polish and the device pass.
+- Device testing: the builder tests in Chrome's device emulation at 360×640,
+  390×844 and 1440×900 and lists what to check. The owner and the sister run
+  the real-phone pass (Android Chrome, iPhone Safari) and report back; launch
+  waits on that.
+- Pushing to `main` deploys, so work happens on a branch until the owner is
+  happy with a milestone; then it is merged and pushed. The repository must be
+  public before the first push that is meant to go live.
