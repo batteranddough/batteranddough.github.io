@@ -55,8 +55,8 @@ Anti-goals (a failure even if it "works")
   `batteranddough/batteranddough.github.io` (GitHub organization
   `batteranddough`, created by the owner). Public URL:
   `https://batteranddough.github.io`. The repository must be public for Pages
-  on the free plan. As of 2026-11-04 the repository exists, is empty, and is
-  private; it has to be switched to public before Pages can be enabled.
+  on the free plan. The repository was created empty and private; it was
+  switched to public on 2026-11-04 with the owner's go-ahead.
 - Accounts: everything in this project uses the owner's personal GitHub
   account `AmaanKhan63` (sole owner of the org), never the work account. The
   local remote uses the SSH alias `github.com-amaan`, which maps to the
@@ -160,6 +160,7 @@ lower third on phones and to the side on laptops.
 | 1 | Bombolone | rolls into a tight ball, proofs (grows), turns golden, gets filled by a piping bag, a dot of chocolate or a cherry on top | sugar sprinkle falls | Bombolone. Pillowy, filled to the brim. |
 | 2 | Cookies | flattens into a disc, cracks open, chocolate chunks rain down and sink in | a cooling rack slides in, two more cookies land beside | Cookies. Crisp edge, gooey middle. |
 | 3 | Cinnamon rolls | stretches into a long strip, rolls up into a spiral, glaze drizzles over | a plate slides under | Cinnamon rolls. Soft, sticky, still warm. |
+| 3b | Croissants | flattens into a triangle, rolls up from the wide end into a crescent, bakes golden, chocolate drapes over half of them | a second crescent lands beside | Croissants. Flaky, buttery, gone in a minute. |
 | 4 | Brownies | squares into a slab, a knife cuts it, two pieces stack with crumbs | a few crumbs scatter | Brownies. Dense, fudgy, unapologetic. |
 | 5 | Cookie pie | spreads into a fluted tart tin, bakes golden, one slice pulls out | a cake slice lifts it | Cookie pie. A cookie you cut like a cake. |
 | 6 | Cookie tin | hops into the pink floral tin as raw dough, a gold scoop lifts a ball | the lid tilts open | Scoopable cookie tin. Bake it yourself, whenever. |
@@ -221,6 +222,13 @@ Cinnamon Rolls
 | Classic cinnamon roll | 310 | 317 |
 | Chocolate cinnamon roll | 426 | 440 |
 
+Croissants (builder-added, under review)
+
+| Item | Size | Eggless | Egg |
+|------|------|---------|-----|
+| Classic butter croissants | Box of 4 | 240 | 248 |
+| Chocolate glazed croissants | Box of 4 | 320 | 332 |
+
 Brownie
 
 | Item | Eggless | Egg |
@@ -258,14 +266,19 @@ until told otherwise:
   places in her draft. Transcribed as written.
 - The printed menu shows the Overjoy combo with 2 Biscoff cookies as well
   (8 cookies). The price draft computes it for 6 cookies without Biscoff:
-  2 × (40 + 27 + 30) = 194, plus 86 = 280 eggless. The 6-cookie version is
-  used because that is what the arithmetic covers. Pending the owner's
-  answer (section 14).
+  2 × (40 + 27 + 30) = 194, plus 86 = 280 eggless. Owner's rule: **the price
+  draft always wins over the printed menu when they conflict.** The 6-cookie
+  version is used.
 - Both combos include a flat ₹86 that her draft labels "added charges"
-  (Blissful: 3 × (27 + 35) = 186, plus 86 = 272 eggless). It is part of the
-  price, not a mistake. What it buys (a gift box, packing) is not stated, so
-  the combo cards say nothing about it until the owner confirms (section 14).
-  If it is a gift box, the card gets a "comes in a gift box" line.
+  (Blissful: 3 × (27 + 35) = 186, plus 86 = 272 eggless). Owner confirmed it
+  is packaging plus shipping. Each combo card carries the line "includes
+  packaging & delivery".
+- Four of the supplied photos show croissants, which were not on either menu.
+  Owner asked for them to be included with a name and price that fit, to be
+  reviewed later. Added as a category **Croissants** between Cinnamon Rolls
+  and Brownie: Classic butter croissants, box of 4, 240 / 248; Chocolate
+  glazed croissants, box of 4, 320 / 332. Builder's numbers, listed in
+  `docs/review-list.md`.
 - Customised items carry the ₹1000 placeholder and a "Customised" tag so
   the number reads as a starting point. The row's add button still works.
 - Her notes about packing charges and per-unit costs are internal and are not
@@ -398,22 +411,24 @@ done).
 Head metadata: title "Batter & Dough · Home bakery", a one-line description,
 Open Graph image and title so WhatsApp link previews show Doughy and a bake.
 
-## 14. Content still to be supplied by the owner
+## 14. Content supplied, defaulted, and under review
 
-Placeholders are used until these arrive; none of them changes the build.
+Supplied by the owner on 2026-11-04:
 
-- WhatsApp number with country code.
-- Instagram handle.
-- City and delivery area, and how much notice an order needs.
-- Three or four sentences for the About section, and whether to use the
-  sister's name.
-- What the croissant-style pastries in the photos are (they are not on the
-  menu). If they are a product, their name and price.
-- Real prices for the four ₹1000 placeholder items.
-- Overjoy combo contents: 6 cookies without Biscoff (price draft) or 8 with
-  Biscoff (printed menu).
-- What the ₹86 "added charges" in both combos covers, so the combo card can
-  say so if it is a gift box.
+- WhatsApp: +91 89996 50554 (link target `wa.me/918999650554`).
+- Instagram: https://www.instagram.com/batter_._dough/
+- City: Solapur. Delivery: anywhere in Solapur for now.
+
+Defaulted by the builder, to be reviewed:
+
+- Notice period: "Please order at least 1 day in advance."
+- About copy: generic placeholder about a small home bakery in Solapur.
+- Croissant names and prices (section 8).
+- Real prices for the four ₹1000 placeholder items are still unknown.
+
+Every default and guess, across all sections, is tracked in
+`docs/review-list.md` so the owner and the sister can go through one list at
+the end. The builder adds to that list whenever a new default is introduced.
 
 ## 15. Left to the builder
 
