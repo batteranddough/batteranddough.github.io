@@ -1,0 +1,8 @@
+{
+  "name": "batter-and-dough-tools",
+  "private": true,
+  "description": "Screenshot and check scripts for the site. Needs Microsoft Edge.",
+  "dependencies": {
+    "puppeteer-core": "23.11.1"
+  }
+}

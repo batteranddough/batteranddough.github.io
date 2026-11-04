@@ -5,3 +5,8 @@
 Thumbs.db
 .DS_Store
 *.swp
+
+# local originals and dev tool output
+/WhatsApp Image*.jpeg
+tools/node_modules/
+tools/out/
