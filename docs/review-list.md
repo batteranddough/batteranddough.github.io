@@ -127,17 +127,18 @@ whenever they differ (owner rule: price draft wins).
 
 ## Launch (build of 2026-11-04)
 
-- [ ] **Live URL**: https://batteranddough.github.io (menu at /menu.html).
-      Pushing `main` publishes; there is no staging copy.
+- [x] **Live URL**: https://batteranddough.github.io (menu at /menu.html),
+      live since 2026-11-04. Pushing `main` publishes within a minute; there
+      is no staging copy.
 - [ ] **Real-phone pass** is the owner's: scroll the whole journey both ways
       on an Android in Chrome and an iPhone in Safari, open the menu, tap a
       photo, tap Order. Report anything that stutters or sits wrong.
-- [ ] **Page weight** (cold load on a phone, measured locally without
-      compression, so the live numbers are lower): home 1,275 KB of which
-      three.js 675 KB, fonts 349 KB, GSAP 117 KB; menu about 405 KB of which
-      fonts 276 KB. GitHub Pages compresses the scripts (three.js arrives at
-      roughly a quarter of its size). The fonts are the next lever if a budget
-      phone feels slow: Fraunces loads five weights and italics.
+- [ ] **Page weight** (cold load on a phone, measured on the live site on
+      2026-11-04): home 631 KB over 20 requests, of which fonts 349 KB,
+      scripts 240 KB (three.js arrives compressed at 169 KB), images 18 KB;
+      menu 400 KB over 19 requests, of which fonts 276 KB, photo thumbnails
+      99 KB. Fonts are now the biggest item on both pages and the next lever
+      if a budget phone feels slow: Fraunces loads five weights and italics.
 - [ ] **Short landscape phones** (under 420 px tall): the night bar and the
       product cards sit on the bottom edge so the bakes stay visible. Builder's
       fix, not in the prototype.
