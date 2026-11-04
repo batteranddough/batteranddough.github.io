@@ -28,10 +28,11 @@ confirmed or replaced it. Keep adding to this list during the build.
 - [ ] **Chocolate Bombolone box of 6** uses ₹210 / ₹222 from the size table,
       not ₹213 / ₹223 from the top of the list. **Cream Brulee box of 6** uses
       ₹162 / ₹168, not ₹160 / ₹170. Price draft size table wins per the owner.
-- [ ] **Cinnamon rolls, fudge brownie, cookie pie, cookie tin** have a single
-      price each and no box size. The site shows them as one item with no
-      size; confirm whether they are per piece, per box, or per slab, and the
-      quantity, so the menu can say so.
+- [ ] **Fudge brownie, cookie pie, cookie tin** have a single price each and
+      no box size. The site shows them as one item with no size; confirm
+      whether they are per piece, per box, or per slab, and the quantity, so
+      the menu can say so. (Cinnamon rolls now have boxes of 4, 6 and 8,
+      supplied 2026-11-04.)
 
 ## Contact and ordering
 

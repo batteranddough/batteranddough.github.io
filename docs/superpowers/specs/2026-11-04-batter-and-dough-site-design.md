@@ -215,12 +215,16 @@ Cookies
 | Brownie cookies | Box of 8 | 322 | 314 |
 | Biscoff cookies | per box | 1000 | 1000 |
 
-Cinnamon Rolls
+Cinnamon Rolls (sizes supplied by the owner on 2026-11-04, afternoon)
 
-| Item | Eggless | Egg |
-|------|---------|-----|
-| Classic cinnamon roll | 310 | 317 |
-| Chocolate cinnamon roll | 426 | 440 |
+| Item | Size | Eggless | Egg |
+|------|------|---------|-----|
+| Classic cinnamon roll | Box of 4 | 155 | 158 |
+| Classic cinnamon roll | Box of 6 | 232 | 238 |
+| Classic cinnamon roll | Box of 8 | 310 | 317 |
+| Chocolate cinnamon roll | Box of 4 | 213 | 220 |
+| Chocolate cinnamon roll | Box of 6 | 319 | 330 |
+| Chocolate cinnamon roll | Box of 8 | 426 | 440 |
 
 Croissants (builder-added, under review)
 
