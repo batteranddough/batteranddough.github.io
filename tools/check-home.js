@@ -5,6 +5,7 @@
 // (d) the "from ₹" lines (cards, featuring panel, chalkboard) follow js/menu-data.js
 // (e) rotating a tablet across the 900 px breakpoint mid-journey keeps the cards on screen
 // (f) the kitchen module cannot load (three.js fetch fails, or no import-map support): still page
+// (g) css contract: the stage is 100lvh, the overlay layers 100svh (phone toolbar collapse leaves no strip)
 // Every case runs; failures are listed at the end and the exit code is 1 if any failed.
 const path = require('path'), fs = require('fs');
 const { resolve } = require('./target');
@@ -141,6 +142,19 @@ async function step(name, fn) {
     await open(page, url); await sleep(600);
     f = await page.evaluate(() => ({ nogl: document.body.classList.contains('no-webgl'), stat: document.body.classList.contains('static'), spacer: document.querySelector('.pin-spacer') !== null, ready: document.getElementById('kitchen').classList.contains('ready') }));
     assert(f.nogl && f.stat && !f.spacer && !f.ready, 'without import-map support the page should become the still page and the kitchen must not start, got ' + JSON.stringify(f));
+  });
+
+  // (g) phone toolbars: the pinned stage must fill the large viewport (toolbar hidden) or a blank strip
+  //     shows under the kitchen once Chrome/Safari collapse their bar; the overlays size to the small
+  //     viewport so bottom-anchored text stays above the bar while it shows. Headless browsers cannot
+  //     collapse a toolbar (svh = lvh there), so this is a contract check on css/home.css.
+  await step('(g) stage fills the large viewport, overlays the small one', async () => {
+    const css = fs.readFileSync(path.join(__dirname, '..', 'css', 'home.css'), 'utf8');
+    const rule = sel => { const m = css.match(new RegExp('^' + sel.replace(/[.]/g, '\.') + ' \{([^}]*)\}', 'm')); return m ? m[1] : ''; };
+    const stage = rule('.stage'), layer = rule('.layer');
+    assert(/height:100lvh/.test(stage) && !/100svh/.test(stage), '.stage should be 100lvh tall (not svh), rule was: ' + stage.trim());
+    assert(/height:100svh/.test(layer) && /bottom:auto/.test(layer), '.layer should be 100svh tall from the top, rule was: ' + layer.trim());
+    assert(/^body\.static \.layer \{[^}]*height:auto/m.test(css), 'the static page should let layers size to their content');
   });
 
   close();

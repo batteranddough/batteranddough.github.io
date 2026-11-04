@@ -13,10 +13,12 @@ body { background:var(--cream); color:var(--cocoa); font:400 16px/1.5 var(--body
 .pill.ghost { background:transparent; color:var(--cocoa); border:1.5px solid rgba(90,46,28,.35); }
 @media (max-width:900px) { .links { display:none; } }
 /* ---------- the journey ---------- */
-.stage { position:relative; height:100vh; height:100svh; overflow:hidden; background:#F3E3D2; isolation:isolate; }
+/* the pinned stage fills the large viewport (phone toolbar hidden) so no strip shows under the kitchen once the bar collapses;
+   the overlay layers size to the small viewport so bottom-anchored text stays above the bar while it shows */
+.stage { position:relative; height:100vh; height:100lvh; overflow:hidden; background:#F3E3D2; isolation:isolate; }
 .stage canvas { position:absolute; inset:0; width:100%; height:100%; display:block; opacity:0; transition:opacity 1s ease; }
 .stage canvas.ready { opacity:1; }
-.layer { position:absolute; inset:0; pointer-events:none; }
+.layer { position:absolute; inset:0; bottom:auto; height:100vh; height:100svh; pointer-events:none; }
 .layer > * { pointer-events:auto; }
 .vignette { position:absolute; inset:0; pointer-events:none; background:linear-gradient(180deg, rgba(90,46,28,.22) 0%, rgba(90,46,28,0) 20%, rgba(90,46,28,0) 72%, rgba(90,46,28,.3) 100%); }
 .headline { position:absolute; left:4vw; bottom:10vh; margin:0; font-family:var(--script); font-weight:700; font-size:clamp(64px, 11vw, 150px); line-height:.9; color:var(--cocoa); }
@@ -88,7 +90,7 @@ body { background:var(--cream); color:var(--cocoa); font:400 16px/1.5 var(--body
 body.static .stage { height:auto; min-height:100svh; }
 body.static .stage canvas { position:relative; height:60vh; }
 body.static .stage .vignette { display:none; }
-body.static .layer { position:relative; inset:auto; padding:22px 4vw; display:grid; gap:18px; }
+body.static .layer { position:relative; inset:auto; height:auto; padding:22px 4vw; display:grid; gap:18px; }
 body.static .layer > * { position:static !important; transform:none !important; opacity:1 !important; animation:none !important; }
 body.static .scrollbtn, body.static .counter, body.static .steps, body.static .say, body.static .l2, body.static .l3, body.static .l4 { display:none; }
 body.static .kicker .long, body.static .kicker .short { display:none; } body.static .kicker .still { display:inline; }

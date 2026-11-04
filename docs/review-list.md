@@ -142,6 +142,10 @@ whenever they differ (owner rule: price draft wins).
 - [ ] **Short landscape phones** (under 420 px tall): the night bar and the
       product cards sit on the bottom edge so the bakes stay visible. Builder's
       fix, not in the prototype.
+- [x] **Phone toolbar strip**: on first load the kitchen stopped short of the
+      bottom edge once Chrome hid its toolbar (owner's report, 2026-11-04).
+      The stage now fills the viewport with the bar hidden, and the text layers
+      keep to the viewport with the bar shown.
 - [ ] **Reduced motion**: visitors with "reduce motion" on get a stacked
       still page (one frame of the kitchen, text below, cards as links). No
       speech bubble there, and Doughy does not idle.
