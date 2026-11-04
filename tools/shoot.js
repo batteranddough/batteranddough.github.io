@@ -4,7 +4,7 @@ const puppeteer = require('puppeteer-core');
 const path = require('path');
 const fs = require('fs');
 const target = process.argv[2];
-const url = /^https?:/.test(target) ? target : 'file:///' + path.resolve(target).split(path.sep).join('/');
+const { resolve } = require('./target');
 const OUT = path.join(__dirname, 'out'); fs.mkdirSync(OUT, { recursive: true });
 const prefix = process.argv[3] || 'r4';
 const DAY = 0.62;
@@ -19,12 +19,14 @@ const views = [
 ].filter(v => which.includes(v.name));
 
 (async () => {
+  const { url, close } = await resolve(target);
   const browser = await puppeteer.launch({ executablePath: EDGE, headless: true, args: ['--no-sandbox', '--hide-scrollbars', '--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', '--enable-webgl'] });
   const errors = [];
   for (const v of views) {
     const page = await browser.newPage();
     page.on('console', m => { if (m.type() === 'error' || m.type() === 'warning') errors.push(v.name + ' console.' + m.type() + ': ' + m.text().slice(0, 300)); });
     page.on('pageerror', e => errors.push(v.name + ' pageerror: ' + e.message));
+    page.on('response', r => { if (r.status() >= 400) errors.push(v.name + ' ' + r.status() + ' ' + r.url()); });
     await page.setViewport({ width: v.w, height: v.h, deviceScaleFactor: v.dpr, isMobile: v.mobile, hasTouch: v.mobile });
     await page.goto(url, { waitUntil: 'networkidle0', timeout: 90000 });
     await new Promise(r => setTimeout(r, 2500));
@@ -81,6 +83,6 @@ const views = [
     }
     await page.close();
   }
-  await browser.close();
+  await browser.close(); close();
   console.log(errors.length ? 'ERRORS/WARNINGS:\n' + errors.join('\n') : 'no console errors');
 })().catch(e => { console.error('FAILED', e); process.exit(1); });

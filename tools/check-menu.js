@@ -4,14 +4,15 @@
 const puppeteer = require('puppeteer-core'); const path = require('path');
 const EDGE = 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe';
 const target = process.argv[2] || 'menu.html';
-const url = /^https?:/.test(target) ? target : 'file:///' + path.resolve(target).split(path.sep).join('/');
+const { resolve } = require('./target');
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 function assert(cond, msg) { if (!cond) throw new Error('FAILED: ' + msg); }
 
 (async () => {
+  const { url, close } = await resolve(target);
   const browser = await puppeteer.launch({ executablePath: EDGE, headless: true, args: ['--no-sandbox', '--hide-scrollbars'] });
   const page = await browser.newPage(); const errs = [];
-  page.on('pageerror', e => errs.push(e.message)); page.on('console', m => { if (m.type() === 'error') errs.push(m.text()); });
+  page.on('response', r => { if (r.status() >= 400) errs.push(r.status() + ' ' + r.url()); }); page.on('pageerror', e => errs.push(e.message)); page.on('console', m => { if (m.type() === 'error') errs.push(m.text()); });
   await page.setViewport({ width: 390, height: 844, deviceScaleFactor: 2, isMobile: true, hasTouch: true });
 
   // 1. opens at the top, even after the browser scrolled on a previous visit
@@ -48,5 +49,5 @@ function assert(cond, msg) { if (!cond) throw new Error('FAILED: ' + msg); }
 
   assert(errs.length === 0, 'console errors: ' + errs.join(' | '));
   console.log('menu checks: ok');
-  await browser.close();
+  await browser.close(); close();
 })().catch(async e => { console.error(e.message); process.exit(1); });
