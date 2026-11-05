@@ -5,9 +5,10 @@ The website of Batter & Dough, a home bakery in Solapur. Live at
 
 Two pages: the home page, where Doughy bakes the morning's batch as you
 scroll, and the menu, where every bake is listed with eggless and egg prices.
-Every "Order" button opens a short order form (bakes, sizes, quantities, the
-day it is needed, delivery or pickup, a name) and then WhatsApp with the
-order typed in. Nothing is stored; the form only composes the message.
+Every "Order" button opens a short order form (bakes, sizes, quantities, a
+strip of day chips for when it is needed, delivery or pickup, a name) and
+then WhatsApp with the order typed in. Nothing is stored; the form only
+composes the message.
 
 Light or dark follows the visitor's phone; the sun / moon button in the nav
 overrides it and remembers the choice on that device.

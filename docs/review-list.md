@@ -239,3 +239,28 @@ settled them.
       "Batter & Dough" title and the kicker stay cocoa on the kitchen. The
       404 page and the order form follow the theme. Confirm the look on a
       phone in dark mode.
+
+### Second look (owner's notes of 2026-11-05, evening)
+
+- [x] **Doughy's last line** stopped at "The whole menu is just below. C": its
+      typing window ran past the end of the journey. It now finishes before
+      the end and stays up as the menu teaser arrives.
+- [x] **Cinnamon rolls card** showed a croissant; it now shows a swirl
+      (the home-page night card and the menu section header). Builder's pick
+      of glyph; a drawn icon would be the next step.
+- [x] **Nav words at night**: "Full menu / Contact" and the wordmark go cream
+      once the lights go down (they were cocoa on the dark kitchen).
+- [x] **Scrollbars**: the order form scrolls without a visible bar; the page
+      bar is thin and in the house colours in both themes (Chromium 121+ and
+      Firefox; Safari keeps its overlay bar).
+- [ ] **Date picker** is now a strip of day chips (Tomorrow, then thirteen
+      days) in the house style, with "Later" revealing the browser's own date
+      box for anything further out. Builder's call: a two-week strip covers
+      most orders; say if it should be longer.
+- [ ] **Box size** is a segmented row (Box of 4 / 6 / 8) like the egg choice,
+      not a dropdown. **Bake** stays a dropdown, drawn in the site's colours
+      where the browser allows it (Chrome, Edge, Brave from early 2025);
+      elsewhere the browser's own list in the matching light/dark scheme.
+- [x] **Pickup** keeps the address cell and shows "We'll share the pickup
+      address and a time on WhatsApp." there, so the name field no longer
+      jumps. Builder's wording.
