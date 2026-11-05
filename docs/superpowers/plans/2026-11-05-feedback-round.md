@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Apply the owner's seven points of 2026-11-05 to the live site: new prices, croissants coming soon, Doughy says "scroll", slow scroll, a real spotlight, a flat cookie, and an order form that composes the WhatsApp message.
+**Goal:** Apply the owner's seven points of 2026-11-05 to the live site: new prices, croissants coming soon, Doughy says "scroll", slow scroll, a real spotlight, a flat cookie, and an order form that composes the WhatsApp message. Plus the owner's later request the same day: a dark mode that follows the system by default, with a toggle at the top.
 
 **Architecture:** Data changes in `js/menu-data.js`; menu rendering in `js/menu.js`; home overlay and scroll in `js/home.js`; lights, camera and props in `js/kitchen.js`; a new shared `js/order.js` + `css/order.css` loaded by both pages and triggered by `data-order` on the existing Order links.
 
@@ -48,7 +48,13 @@
 - [ ] Test: `tools/check-menu.js` (5) Order on a cookie after switching to egg opens the dialog prefilled; add a row; set qty 2; stub `window.open`; submit; assert the composed text and the link. `tools/check-home.js` (k): nav pill opens the dialog; Escape closes; no pin-spacer change.
 - [ ] `js/order.js`, `css/order.css`; wire `data-order` on both pages; menu item buttons pass `cat:index`.
 
-### Task 5: Docs, review, ship
+### Task 5: Dark mode (owner's request of 2026-11-05, added mid-round)
+- [ ] Test: `tools/check-pages.js` or a new case: with `prefers-color-scheme: dark` emulated the pages carry the dark palette (body background is dark, `html[data-theme]` absent); the nav toggle switches to light and the choice survives a reload (`localStorage`); the toggle exists on index, menu and 404.
+- [ ] `css/site.css`: dark palette under `@media (prefers-color-scheme: dark)` and `html[data-theme="dark"]`; `html[data-theme="light"]` forces light; glass, nav, pills, footer, menu cards, dialog follow the tokens.
+- [ ] `js/theme.js`: tiny inline-safe script (runs before paint) that applies the saved choice; the toggle button in every nav; `meta[name=theme-color]` follows.
+- [ ] Home page: overlays and the teaser follow the tokens; the kitchen canvas keeps its own light (it is the scene, not the page chrome).
+
+### Task 6: Docs, review, ship
 - [ ] `docs/review-list.md` new section; README note on the form and on `soon`/`ask`.
 - [ ] Full suite: check-home, check-menu, check-pages, shoot (no console errors).
 - [ ] Branch review by a fresh reviewer; fix; merge; push; live checks; memory.

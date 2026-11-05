@@ -1,6 +1,8 @@
-/* Single source of truth for the menu. Prices from the owner's "Menu Draft" of 2026-11-04 (size table wins
-   over the top-of-list prices where they differ, per the standing rule). Every item: eggless prices then egg
-   prices, one per size. photo: null means "shot coming soon" and shows Doughy instead. */
+/* Single source of truth for the menu. Prices from the owner's two menu cards of 2026-11-05 ("Our menu" and
+   "Know more about sizes"; the size card wins where the two differ, per the standing rule). Every item: eggless
+   prices then egg prices, one per size. photo: null means "shot coming soon" and shows Doughy instead.
+   ask: true means the card lists the item without a price ("price on request"); soon: true on a category means
+   it is not for sale yet: photos show, prices and Order buttons do not, and the order form leaves it out. */
 window.MENU_DATA = {
   whatsapp: '918999650554',
   categories: [
@@ -9,8 +11,9 @@ window.MENU_DATA = {
       blurb: 'Pillowy doughnuts, fried fresh and rolled in sugar, filled to the brim.',
       sizes: ['Box of 3', 'Box of 6'],
       items: [
-        { name: 'Chocolate Bombolone', tag: 'Dark chocolate filling', eggless: [105, 210], egg: [111, 222], photo: null },
-        { name: 'Crème brûlée Bombolone', tag: 'Custard filling, burnt-sugar top', eggless: [81, 162], egg: [84, 168], photo: null }
+        { name: 'Chocolate Bombolone', tag: 'Dark chocolate filling', eggless: [106, 213], egg: [111, 223], photo: null },
+        { name: 'Crème brûlée Bombolone', tag: 'Custard filling, burnt-sugar top', eggless: [81, 162], egg: [120, 238], photo: null },
+        { name: 'Customised fillings', tag: 'Tell us what you fancy', ask: true, photo: null }
       ]
     },
     {
@@ -39,17 +42,18 @@ window.MENU_DATA = {
       sizes: ['Each'],
       items: [
         { name: 'Fudge brownie', tag: 'Dense, dark, glossy top', eggless: [331], egg: [347], photo: null },
+        { name: 'Brownie slab', tag: 'A whole slab, customised for your table', ask: true, photo: null },
         { name: 'Cookie pie', tag: 'A whole cookie, baked as a pie', eggless: [402], egg: [417], photo: null },
         { name: 'Scoopable cookie tin', tag: 'Cookie dough you eat with a spoon', eggless: [436], egg: [447], photo: null }
       ]
     },
     {
       id: 'croissants', name: 'Croissants', short: 'Croissants', tint: '#FBE7D0', emoji: '🥐',
-      blurb: 'Laminated by hand. Best the same day.',
-      sizes: ['Box of 4'], review: 'Not on the price draft yet; names and prices are placeholders.',
+      blurb: 'Laminated by hand. Not on the menu just yet.',
+      sizes: ['Box of 4'], soon: true,
       items: [
-        { name: 'Classic butter croissants', tag: 'Flaky, buttery', eggless: [240], egg: [248], photo: 'photos/croissant-butter-sunset.jpg', photo2: 'photos/croissant-butter-night.jpg' },
-        { name: 'Chocolate croissants', tag: 'Dipped in dark chocolate', eggless: [320], egg: [332], photo: 'photos/croissant-choc-sunset.jpg', photo2: 'photos/croissant-choc-night.jpg' }
+        { name: 'Classic butter croissants', tag: 'Flaky, buttery', photo: 'photos/croissant-butter-sunset.jpg', photo2: 'photos/croissant-butter-night.jpg' },
+        { name: 'Chocolate croissants', tag: 'Dipped in dark chocolate', photo: 'photos/croissant-choc-sunset.jpg', photo2: 'photos/croissant-choc-night.jpg' }
       ]
     },
     {
@@ -58,10 +62,11 @@ window.MENU_DATA = {
       sizes: ['Combo'],
       items: [
         { name: 'Combo cookies', tag: 'Two each of all four cookies, eight in the box', eggless: [380], egg: [370], photo: null, note: 'includes packaging & delivery' },
-        { name: 'Blissful Bombolone', tag: 'Three crème brûlée, three chocolate', eggless: [272], egg: [281], photo: null, note: 'includes packaging & delivery' }
+        { name: 'Blissful Bombolone', tag: 'Three crème brûlée, three chocolate', eggless: [272], egg: [316], photo: null, note: 'includes packaging & delivery' }
       ]
     }
   ]
 };
-window.MENU_DATA.fromPrice = function (cat) { return Math.min.apply(null, cat.items.map(function (i) { return i.eggless[0]; })); };
+window.MENU_DATA.priced = function (it) { return !!(it.eggless && it.egg); };
+window.MENU_DATA.fromPrice = function (cat) { return Math.min.apply(null, cat.items.filter(window.MENU_DATA.priced).map(function (i) { return i.eggless[0]; })); };
 window.MENU_DATA.waLink = function (text) { return 'https://wa.me/' + window.MENU_DATA.whatsapp + (text ? '?text=' + encodeURIComponent(text) : ''); };

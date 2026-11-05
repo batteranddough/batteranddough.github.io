@@ -164,6 +164,26 @@ Nothing is stored anywhere; the form is client-side only. Keyboard: Escape
 closes, focus lands on the first field on open, the backdrop closes on tap.
 Behind the dialog the page's scroll is locked, as for the photo lightbox.
 
+### 2.8 Dark mode (requested later the same day)
+
+Owner: "add a dark mode and a toggle on the top; by default it follows the
+system's light/dark."
+
+- The site follows `prefers-color-scheme` until the visitor taps the
+  toggle; the tap sets `data-theme` on `<html>` and is remembered in
+  `localStorage` for that device. A tiny script in `<head>` applies the
+  saved choice before first paint so there is no flash.
+- The toggle sits in the nav on every page (home, menu, 404), between the
+  links and the WhatsApp pill: a round glass button with a sun / moon glyph
+  and an accessible label.
+- Dark palette (builder's call): deep cocoa backgrounds (#1F1410 page,
+  #2A1B15 paper), cream text (#F3E7DA), the pink heart and tints kept, glass
+  panels become dark glass, the WhatsApp pill stays cocoa-on-cream inverted
+  to cream-on-cocoa-dark so it still reads as the site's pill.
+- The kitchen scene keeps its own daylight: dark mode is the page's chrome,
+  not the time of day in the kitchen. The stage background behind the canvas
+  and the still-page poster area follow the dark palette.
+
 ## 3. Goals, non-goals, anti-goals (this round)
 
 Goals: a first-time visitor knows to scroll within two seconds; an order

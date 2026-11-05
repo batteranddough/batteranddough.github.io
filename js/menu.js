@@ -7,7 +7,8 @@
   function thumb(p) { return p.replace(/^photos\//, 'photos/thumbs/').replace(/\.jpg$/, '.webp'); }
   var chips = document.getElementById('chips'), main = document.getElementById('menu');
   function hasPhoto(c) { return c.items.some(function (i) { return !!i.photo; }) ? 1 : 0; }
-  var CATS = MD.categories.slice().sort(function (a, b) { return hasPhoto(b) - hasPhoto(a); });
+  // categories with real photos first; anything not for sale yet (soon) goes last whatever its photos
+  var CATS = MD.categories.slice().sort(function (a, b) { return ((a.soon ? 1 : 0) - (b.soon ? 1 : 0)) || (hasPhoto(b) - hasPhoto(a)); });
   chips.innerHTML = CATS.map(function (c) { return '<a href="#' + c.id + '" data-id="' + c.id + '">' + c.short + '</a>'; }).join('');
   function price(it, i) { return (egg ? it.egg : it.eggless)[i]; }
   function media(c, it) {
@@ -19,11 +20,15 @@
   }
   function render() {
     main.innerHTML = CATS.map(function (c) {
-      return '<section class="cat' + (c.id === 'combos' ? ' combos' : '') + '" id="' + c.id + '" style="--tint:' + c.tint + '"><header><h2><i>' + c.emoji + '</i>' + c.name + (c.review ? '<span class="rev" title="' + c.review + '">to confirm</span>' : '') + '</h2><p>' + c.blurb + '</p></header><div class="grid">' +
-        c.items.slice().sort(function (a, b) { return (b.photo ? 1 : 0) - (a.photo ? 1 : 0); }).map(function (it) {
-          var sizes = c.sizes.map(function (sz, i) { return '<span class="sz"><small>' + sz + '</small><b>₹' + price(it, i) + '</b></span>'; }).join('');
-          var msg = "Hi Batter & Dough! I'd like " + it.name + (c.sizes.length > 1 ? ' (' + c.sizes[0].toLowerCase() + ')' : '') + ', ' + (egg ? 'with egg' : 'eggless') + '.';
-          return '<article class="item"><div class="media">' + media(c, it) + '</div><div class="body"><h3>' + it.name + '</h3><p class="tag">' + it.tag + '</p><div class="sizes">' + sizes + '</div>' + (it.note ? '<p class="note">' + it.note + '</p>' : '') + '<div class="act"><span class="egg' + (egg ? ' with' : '') + '" title="' + (egg ? 'With egg' : 'Eggless') + '">' + (egg ? EGG : NOEGG) + '<i class="vh">' + (egg ? 'with egg' : 'eggless') + '</i></span><a class="pill ghost wa" href="' + MD.waLink(msg) + '" target="_blank" rel="noopener">Order</a></div></div></article>';
+      var badge = c.soon ? '<span class="rev" title="Not taking orders for these yet">Coming soon</span>' : c.review ? '<span class="rev" title="' + c.review + '">to confirm</span>' : '';
+      return '<section class="cat' + (c.id === 'combos' ? ' combos' : '') + (c.soon ? ' soon' : '') + '" id="' + c.id + '" style="--tint:' + c.tint + '"><header><h2><i>' + c.emoji + '</i>' + c.name + badge + '</h2><p>' + c.blurb + '</p></header><div class="grid">' +
+        c.items.map(function (it, i) { return { it: it, i: i }; }).sort(function (a, b) { return (b.it.photo ? 1 : 0) - (a.it.photo ? 1 : 0); }).map(function (x) {
+          var it = x.it, head = '<article class="item"><div class="media">' + media(c, it) + '</div><div class="body"><h3>' + it.name + '</h3><p class="tag">' + it.tag + '</p>';
+          if (c.soon) return head + '<p class="soon">Coming soon</p></div></article>';
+          var priced = MD.priced(it);
+          var sizes = priced ? c.sizes.map(function (sz, i) { return '<span class="sz"><small>' + sz + '</small><b>₹' + price(it, i) + '</b></span>'; }).join('') : '<span class="ask">Price on request</span>';
+          var msg = "Hi Batter & Dough! I'd like " + it.name + (priced && c.sizes.length > 1 ? ' (' + c.sizes[0].toLowerCase() + ')' : '') + ', ' + (egg ? 'with egg' : 'eggless') + (priced ? '.' : '. What would it cost?');
+          return head + '<div class="sizes">' + sizes + '</div>' + (it.note ? '<p class="note">' + it.note + '</p>' : '') + '<div class="act"><span class="egg' + (egg ? ' with' : '') + '" title="' + (egg ? 'With egg' : 'Eggless') + '">' + (egg ? EGG : NOEGG) + '<i class="vh">' + (egg ? 'with egg' : 'eggless') + '</i></span><a class="pill ghost wa" href="' + MD.waLink(msg) + '" target="_blank" rel="noopener" data-order="' + c.id + ':' + x.i + '">Order</a></div></div></article>';
         }).join('') + '</div></section>';
     }).join('');
   }
