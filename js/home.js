@@ -179,6 +179,7 @@
     scrollTw = gsap.to(o, { y: to, duration: dur, ease: 'power2.inOut', onUpdate: function () { window.scrollTo(0, o.y); }, onComplete: function () { scrollTw = null; } });
   }
   ['wheel', 'touchstart', 'keydown', 'pointerdown'].forEach(function (ev) { window.addEventListener(ev, stopScroll, { passive: true }); });
+  F.scrolling = function () { return !!scrollTw; };
   var STATION_HP = [0.30, 0.50, 0.77, 0.94]; // mix, roll, bake, box: inside each hold, where Doughy is at work
   function scrollToProduct(k) { scrollJourneyTo(DAY + (Q0 + k * QL + 0.45 * QL) * (1 - DAY)); }
   Array.prototype.forEach.call(cardEls, function (c) { c.addEventListener('click', function (e) { if (F.st) { e.preventDefault(); scrollToProduct(+c.getAttribute('data-k')); } }); });

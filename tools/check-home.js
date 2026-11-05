@@ -9,6 +9,7 @@
 // (h) at rest Doughy types the scroll hint by himself; the kicker no longer says "scroll"
 // (i) the arrow button scrolls slowly (a tween over seconds) to the mixer hold; any wheel input stops it
 // (j) the Mix / Roll / Bake / Box chips are buttons that take the journey to that station
+// (k) the Order buttons open the order form over the pinned journey; Escape closes it
 // Every case runs; failures are listed at the end and the exit code is 1 if any failed.
 // ONLY=h,i runs just those cases.
 const path = require('path'), fs = require('fs');
@@ -181,16 +182,20 @@ async function step(name, fn) {
   await step('(i) the arrow button scrolls slowly and yields to the visitor', async (browser) => {
     const page = await browser.newPage(); const errs = []; watch(page, errs, 'arrow');
     await page.setViewport({ width: 1280, height: 800, deviceScaleFactor: 1 }); await open(page, url); await sleep(1500);
-    await page.click('#scrollbtn'); await sleep(500);
-    const mid = await page.evaluate(() => ({ p: window.BD.p, y: window.scrollY }));
-    assert(mid.y > 0 && mid.p < 0.12, 'half a second after the tap the journey should be under way but nowhere near the mixer, scrollY was ' + mid.y + ' and p ' + mid.p.toFixed(3));
-    await sleep(4000);
+    // the tween is time-based but GSAP smooths over slow frames, so a loaded headless machine stretches it: poll its state
+    const moving = async () => { const t0 = Date.now(); while (Date.now() - t0 < 6000) { const y = await page.evaluate(() => window.scrollY); if (y > 0) return y; await sleep(100); } return 0; };
+    const settled = async () => { const t0 = Date.now(); while (Date.now() - t0 < 20000) { if (!(await page.evaluate(() => window.BD.scrolling()))) { await sleep(300); return; } await sleep(200); } throw new Error('the scroll tween did not finish within 20 s'); };
+    await page.click('#scrollbtn');
+    const y0 = await moving();
+    const mid = await page.evaluate(() => ({ p: window.BD.p, y: window.scrollY, tw: window.BD.scrolling() }));
+    assert(y0 > 0 && mid.tw && mid.p < 0.12, 'after the tap the journey should be under way (still tweening) but nowhere near the mixer, got ' + JSON.stringify(mid));
+    await settled();
     const end = await page.evaluate(() => window.BD.p);
     assert(Math.abs(end - 0.30 * 0.62) < 0.02, 'the arrow should land on the mixer hold (hp 0.30, p 0.186), p was ' + end.toFixed(3));
     await page.screenshot({ path: path.join(OUT, 'arrow-landed.png') });
     // a wheel event mid-tween hands the scroll back to the visitor
     await page.evaluate(() => { window.scrollTo(0, 0); window.BD.s = 0; }); await sleep(800); // settle the overlay smoothing so the button accepts taps again
-    await page.click('#scrollbtn'); await sleep(1200);
+    await page.click('#scrollbtn'); assert((await moving()) > 0, 'the second tap should start the tween again');
     await page.evaluate(() => window.dispatchEvent(new WheelEvent('wheel', { deltaY: 40 }))); await sleep(300);
     const y1 = await page.evaluate(() => window.scrollY); await sleep(800);
     const y2 = await page.evaluate(() => window.scrollY);
@@ -203,11 +208,28 @@ async function step(name, fn) {
     await page.setViewport({ width: 1280, height: 800, deviceScaleFactor: 1 }); await open(page, url); await sleep(1500);
     const tag = await page.evaluate(() => document.querySelector('#steps [data-s="2"]').tagName);
     assert(tag === 'BUTTON', 'the chips should be buttons, Bake was a ' + tag);
-    await page.click('#steps [data-s="2"]'); await sleep(5500);
+    await page.click('#steps [data-s="2"]'); await sleep(800);
+    { const t0 = Date.now(); while (Date.now() - t0 < 20000 && await page.evaluate(() => window.BD.scrolling())) await sleep(200); } await sleep(300);
     const p = await page.evaluate(() => window.BD.p);
     assert(Math.abs(p - 0.77 * 0.62) < 0.02, 'Bake should land in the oven hold (hp 0.77, p 0.477), p was ' + p.toFixed(3));
     await page.screenshot({ path: path.join(OUT, 'chip-bake.png') });
     assert(errs.length === 0, 'chips errors: ' + errs.join(' | '));
+  });
+
+  await step('(k) the order form opens over the journey', async (browser) => {
+    const page = await browser.newPage(); const errs = []; watch(page, errs, 'order');
+    await page.setViewport(PHONE); await open(page, url); await sleep(500);
+    await page.click('.nav .pill.wa'); await sleep(400);
+    const o = await page.evaluate(() => { const od = document.getElementById('order'); return { shown: od && !od.hidden && getComputedStyle(od).display !== 'none', spacer: document.querySelector('.pin-spacer') !== null, rows: od ? od.querySelectorAll('.row').length : 0, egg: od && (od.querySelector('.row .eseg button.on') || {}).getAttribute && od.querySelector('.row .eseg button.on').getAttribute('data-e'), inside: od ? (function () { const r = od.querySelector('.od-card').getBoundingClientRect(); return r.top >= 0 && r.bottom <= innerHeight; })() : false, quick: document.querySelectorAll('.rstack [data-order]').length }; });
+    assert(o.shown, 'the WhatsApp pill should open the order form');
+    assert(o.spacer, 'the journey should stay pinned behind the form');
+    assert(o.rows === 1 && o.egg === '0', 'the form should open with one eggless row, got ' + JSON.stringify(o));
+    assert(o.inside, 'the form card should fit inside the phone viewport');
+    assert(o.quick === 1, 'the quick-menu Order link should open the form too');
+    await page.screenshot({ path: path.join(OUT, 'order-phone.png') });
+    await page.keyboard.press('Escape'); await sleep(200);
+    assert(await page.evaluate(() => document.getElementById('order').hidden), 'Escape should close the form');
+    assert(errs.length === 0, 'order errors: ' + errs.join(' | '));
   });
 
   close();
