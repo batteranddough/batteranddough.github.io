@@ -48,6 +48,8 @@ function jpegSize(buf) {
   for (const f of ['favicon.png', 'apple-touch-icon.png', '404.html', 'README.md', '.nojekyll']) assert(fs.existsSync(path.join(ROOT, f)), f + ' is missing');
   const readme = fs.readFileSync(path.join(ROOT, 'README.md'), 'utf8');
   assert(readme.includes('js/menu-data.js') && readme.includes('tools/serve.js'), 'README should say where prices live and how to preview');
+  const rollsLine = fs.readFileSync(path.join(ROOT, 'js', 'menu-data.js'), 'utf8').split('\n').find(l => /id: 'rolls'/.test(l)) || '';
+  assert(rollsLine && !rollsLine.includes('\u{1F950}'), 'the cinnamon rolls category should not carry the croissant emoji');
 
   // the 404 page renders with its heading and both ways out
   const { url, close } = await resolve(path.join(ROOT, '404.html'));

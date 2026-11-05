@@ -28,7 +28,7 @@ window.MENU_DATA = {
       ]
     },
     {
-      id: 'rolls', name: 'Cinnamon rolls', short: 'Rolls', tint: '#CDEBDC', emoji: '🥐',
+      id: 'rolls', name: 'Cinnamon rolls', short: 'Rolls', tint: '#CDEBDC', emoji: '🍥',
       blurb: 'Soft, sticky, cream cheese glaze, still warm when they reach you.',
       sizes: ['Box of 4', 'Box of 6', 'Box of 8'],
       items: [

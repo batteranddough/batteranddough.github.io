@@ -18,6 +18,8 @@ const { launch, watch, open, gotoProgress, sleep } = require('./frame');
 const OUT = path.join(__dirname, 'out'); fs.mkdirSync(OUT, { recursive: true });
 const target = process.argv[2] || 'index.html';
 function assert(cond, msg) { if (!cond) throw new Error(msg); }
+// relative luminance of an rgb() string, 0 dark .. 1 light
+const lum = c => { const m = /rgba?\((\d+),\s*(\d+),\s*(\d+)/.exec(c || ''); if (!m) return -1; return (0.2126 * m[1] + 0.7152 * m[2] + 0.0722 * m[3]) / 255; };
 const PHONE = { width: 390, height: 844, deviceScaleFactor: 2, isMobile: true, hasTouch: true };
 const failures = [];
 const only = process.env.ONLY ? process.env.ONLY.split(',') : null;
@@ -230,6 +232,25 @@ async function step(name, fn) {
     await page.keyboard.press('Escape'); await sleep(200);
     assert(await page.evaluate(() => document.getElementById('order').hidden), 'Escape should close the form');
     assert(errs.length === 0, 'order errors: ' + errs.join(' | '));
+  });
+
+  await step('(l) the last line finishes, the nav goes light at night, the rolls card is not a croissant', async (browser) => {
+    const page = await browser.newPage(); const errs = []; watch(page, errs, 'l');
+    await page.setViewport({ width: 1280, height: 800, deviceScaleFactor: 1 });
+    await open(page, url);
+    const rest = await page.evaluate(() => ({ nav: getComputedStyle(document.getElementById('nav')).color, rolls: document.querySelector('.pcard[data-k="2"] .jw').textContent.trim() }));
+    assert(rest.rolls !== '\u{1F950}', 'the cinnamon rolls card should not carry the croissant emoji');
+    assert(lum(rest.nav) < 0.4, 'at rest the nav words should be cocoa over the daylight kitchen, were ' + rest.nav);
+    await gotoProgress(page, 0.8); await sleep(1500); // the nav colour eases over .4 s, and the headless renderer is slow
+    const night = await page.evaluate(() => getComputedStyle(document.getElementById('nav')).color);
+    assert(lum(night) > 0.6, 'at night the nav words should be light over the dark kitchen, were ' + night);
+    await gotoProgress(page, 1); await sleep(400);
+    const endp = await page.evaluate(() => ({ p: window.BD.p, text: document.getElementById('saytext').textContent, cur: !!document.querySelector('#saytext .cur'), op: +getComputedStyle(document.getElementById('say')).opacity }));
+    assert(endp.text === 'The whole menu is just below. Come.' && !endp.cur, 'at the end of the journey the last line should be fully typed, it read "' + endp.text + '" at p ' + endp.p);
+    assert(endp.op > 0.9, 'the last line should still be showing at the end, opacity was ' + endp.op);
+    await page.screenshot({ path: path.join(OUT, 'end-desk.png') });
+    assert(errs.length === 0, 'errors: ' + errs.join(' | '));
+    await page.close();
   });
 
   close();

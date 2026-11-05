@@ -107,7 +107,8 @@
     { k: 0, a: 0.30, b: 0.80, fade: 0.04, type: 0.16, t: "Bombolone. Fried fresh, filled to the brim." },
     { k: 1, a: 0.30, b: 0.80, fade: 0.04, type: 0.16, t: "Cookies. Crisp edge, gooey middle." },
     { k: 2, a: 0.30, b: 0.80, fade: 0.04, type: 0.16, t: "Cinnamon rolls. Still warm when they reach you." },
-    { k: 2, a: 0.87, b: 1.0, fade: 0.03, type: 0.08, t: "The whole menu is just below. Come." }
+    // the rolls segment's u tops out at 0.933 when the journey ends (q = 1), so this line must finish typing before that and its b stays out of reach so it holds
+    { k: 2, a: 0.82, b: 1.0, fade: 0.03, type: 0.08, t: "The whole menu is just below. Come." }
   ];
   function esc(t) { return t.replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
   function updateSay(hp, q) {
@@ -156,6 +157,7 @@
   }
   setActiveProduct(0);
   function updateNightOverlay(q) {
+    nav.classList.toggle('night', q > 0.03);
     var sg = F.segment(q), k = sg.k, u = sg.u;
     if (k !== F.activeK) setActiveProduct(k);
     var on = smooth(0.03, 0.09, q);
