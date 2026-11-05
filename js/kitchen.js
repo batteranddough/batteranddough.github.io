@@ -32,7 +32,9 @@ const DAY_KEYS = [
 const PROD_X = [-0.85, 0, 0.85];
 const WIDE = { pos: [0.2, 2.0, 3.7], tgt: [0, 0.95, -0.2] };
 const WIDE2 = { pos: [0.0, 1.95, 3.5], tgt: [0, 0.95, -0.2] };
-const CLOSE = PROD_X.map(dx => ({ pos: [dx + 0.3, 1.4, 1.35], tgt: [dx - 0.05, 1.0, 0.0] }));
+// the close-ups look down at the bake from the front-right (about 33 degrees above the counter): the pool of light shows, the
+// pieces separate, and Doughy, behind the island, is in the upper corner of the frame rather than filling half of it
+const CLOSE = PROD_X.map(dx => ({ pos: [dx + 0.42, 1.78, 1.15], tgt: [dx - 0.02, 0.98, 0.0] }));
 const CLOSE2 = CLOSE.map(c => ({ pos: [lerp(c.pos[0], c.tgt[0], 0.12), lerp(c.pos[1], c.tgt[1], 0.12), lerp(c.pos[2], c.tgt[2], 0.12)], tgt: c.tgt }));
 const WORDS = ['BOMBOLONE', 'COOKIES', 'CINNAMON'];
 const ACC = ['#F7CFD6', '#FAEBB4', '#CDEBDC'];
@@ -490,9 +492,9 @@ function buildKitchen(renderer) {
   const plate2 = new THREE.Mesh(new THREE.CylinderGeometry(0.19, 0.17, 0.015, 32), std(0xFFF9F3, 0.4)); plate2.position.y = 0.008; plate2.receiveShadow = true; cookieStack.add(plate2);
   const gm = std(GOLD, 0.75), cm = std(CHOC, 0.5);
   for (let i = 0; i < 3; i++) { const c = makeCookie({ bake: gm, chip: cm }); c.position.set(0, 0.016 + i * 0.032, 0); c.rotation.y = i * 0.7; c.scale.setScalar(1.3); cookieStack.add(c); }
-  const c2 = makeCookie({ bake: gm, chip: cm }); c2.position.set(0.17, 0.016, 0.1); c2.rotation.set(0.2, 0.4, 1.2); c2.scale.setScalar(1.3); cookieStack.add(c2);
+  const c2 = makeCookie({ bake: gm, chip: cm }); c2.position.set(0.17, 0.016, 0.09); c2.rotation.set(0, 0.9, 0); c2.scale.setScalar(1.3); cookieStack.add(c2); // flat on the plate (propped on its edge it read as a broken cookie)
   const st2 = makeStand(); st2.position.set(PROD_X[0], CH, 0); showcase.add(st2);
-  for (let i = 0; i < 3; i++) { const b = makeBombolone(std(GOLD, 0.7)); const a = i * TAU / 3 + 0.5; b.position.set(PROD_X[0] + Math.cos(a) * 0.1, CH + 0.155, Math.sin(a) * 0.1); b.scale.setScalar(1.15); showcase.add(b); }
+  for (let i = 0; i < 3; i++) { const b = makeBombolone(std(GOLD, 0.7)); const a = i * TAU / 3 + 0.5; b.position.set(PROD_X[0] + Math.cos(a) * 0.115, CH + 0.155, Math.sin(a) * 0.115); b.scale.setScalar(1.05); showcase.add(b); }
   const bd = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.025, 0.34), std(0xC9955E, 0.7)); bd.position.set(PROD_X[2], CH + 0.0125, 0); bd.castShadow = true; bd.receiveShadow = true; showcase.add(bd);
   for (let i = 0; i < 2; i++) { const r = makeRoll(std(GOLD, 0.7)); r.position.set(PROD_X[2] - 0.12 + i * 0.24, CH + 0.025, 0); r.scale.setScalar(1.15); showcase.add(r); }
   showcase.scale.setScalar(0.0001);
@@ -514,8 +516,10 @@ function buildKitchen(renderer) {
   const prodSpots = [];
   PROD_X.forEach((dx, k) => {
     const col = new THREE.Color(ACC[k]).lerp(new THREE.Color(0xffffff), 0.35);
-    const sp = new THREE.SpotLight(col, 0, 6, 0.5, 0.7, 1.4); sp.position.set(dx, 2.6, 0.9); sp.target.position.set(dx, 0.9, 0.0); sp.castShadow = true; sp.shadow.mapSize.set(1024, 1024); sp.visible = false; scene.add(sp, sp.target);
-    const pt = new THREE.PointLight(col, 0, 2.5, 2); pt.position.set(dx, 1.4, 0.6); pt.visible = false; scene.add(pt);
+    // a narrow cone (half-angle 0.24 rad, soft edge) hung above and just in front of the bake, aimed at the counter top: it draws a
+    // pool of light around the bake and misses Doughy, who stands behind the island
+    const sp = new THREE.SpotLight(col, 0, 6, 0.24, 0.45, 1.4); sp.position.set(dx, 2.75, 0.55); sp.target.position.set(dx, 0.9, 0.0); sp.castShadow = true; sp.shadow.mapSize.set(1024, 1024); sp.visible = false; scene.add(sp, sp.target);
+    const pt = new THREE.PointLight(col, 0, 1.6, 2); pt.position.set(dx, 1.3, 0.45); pt.visible = false; scene.add(pt);
     prodSpots.push({ sp, pt });
   });
 
@@ -556,14 +560,14 @@ function buildKitchen(renderer) {
     sunDir.set(-Math.cos(a), Math.sin(a) * 0.9 + 0.12, 0.35).normalize();
     const sunI = keyI(SUN_I, h); colKey(SUN_C, h, sunCol);
     sun.position.copy(sunDir).multiplyScalar(18).add(sun.target.position); sun.intensity = sunI * (1 - nightMix); sun.color.copy(sunCol);
-    ambient.intensity = lerp(keyI(AMB_I, h), 0.25, nightMix); colKey(AMB_C, h, ambient.color); ambient.color.lerp(NIGHT_AMB, nightMix);
-    hemi.intensity = lerp(keyI(HEM_I, h), 0.25, nightMix); colKey(HEM_C, h, hemi.color); colKey(HEM_G, h, hemi.groundColor);
+    ambient.intensity = lerp(keyI(AMB_I, h), 0.1, nightMix); colKey(AMB_C, h, ambient.color); ambient.color.lerp(NIGHT_AMB, nightMix);
+    hemi.intensity = lerp(keyI(HEM_I, h), 0.1, nightMix); colKey(HEM_C, h, hemi.color); colKey(HEM_G, h, hemi.groundColor);
     colKey(BG_C, h, scene.background); scene.background.lerp(NIGHT_BG, nightMix); scene.fog.color.copy(scene.background); scene.fog.density = lerp(0.028, 0.05, nightMix);
-    const lampK = lerp(keyI(LAMP_I, h), 0.35, nightMix), nightK = Math.max(keyI(NIGHT_K, h), nightMix);
+    const lampK = lerp(keyI(LAMP_I, h), 0.15, nightMix), nightK = Math.max(keyI(NIGHT_K, h), nightMix);
     bulbMat.color.copy(bulbBase).multiplyScalar(0.3 + 0.9 * lampK);
     lampSprites.forEach(s => { s.sp.material.opacity = s.base * lampK; });
     pendantLights.forEach(l => { l.intensity = 5 * lampK; });
-    fill.intensity = 3 * (1 - 0.5 * nightK);
+    fill.intensity = 3 * (1 - 0.5 * nightK) * (1 - 0.6 * nightMix);
     colKey(SKY_TOP, h, skT); colKey(SKY_HOR, h, skH);
     for (let r = 0; r <= 8; r++) { tmpC.copy(skT).lerp(skH, Math.pow(r / 8, 1.4)); for (let c2 = 0; c2 < 2; c2++) skyCol.setXYZ(r * 2 + c2, tmpC.r, tmpC.g, tmpC.b); }
     skyCol.needsUpdate = true;
@@ -673,17 +677,22 @@ function buildKitchen(renderer) {
 
     // --- the night: showcase pops in, spotlights pick each bake, letters in camera space ---
     showcase.scale.setScalar(Math.max(0.0001, pop(0.03, 0.09, q)));
+    island2.scale.setScalar(Math.max(0.001, 1 - smooth(0.0, 0.08, q)));
+    // only the bake on show is lit: all three pools during "lights down" and again at the very end, otherwise the featured
+    // one swells as the camera arrives and dims as it pulls back, the other two left with a trace
     const sg = F.segment(q);
+    const allK = (1 - smooth(Q0, Q0 + 0.05, q)) + smooth(0.95, 1.0, q);
     for (let i = 0; i < 3; i++) {
-      const on = (q >= Q0 && i === sg.k) ? smooth(0.3, 0.42, sg.u) * (1 - smooth(0.7, 0.78, sg.u)) : 0;
-      prodSpots[i].sp.intensity = nightMix * (10 + 16 * on); prodSpots[i].pt.intensity = nightMix * (1 + 2.5 * on);
+      const feat = (q >= Q0 && i === sg.k) ? smooth(0.12, 0.3, sg.u) * (1 - smooth(0.78, 0.88, sg.u)) : 0;
+      const k = Math.min(1, 0.03 + 0.45 * allK + feat);
+      prodSpots[i].sp.intensity = nightMix * 34 * k; prodSpots[i].pt.intensity = nightMix * 2.6 * k;
     }
 
     // idle life
     doughy.position.y += Math.sin(t * 2.2) * 0.006;
     _hv.set(doughy.position.x + 0.12, doughy.position.y + 0.3, doughy.position.z).project(cam); const _el = renderer.domElement;
     window.BD.head = { x: (_hv.x + 1) / 2 * _el.clientWidth, y: (1 - _hv.y) / 2 * _el.clientHeight, on: _hv.z < 1 };
-    _cd.subVectors(cam.position, doughy.position).normalize(); charLight.position.copy(doughy.position).addScaledVector(_cd, 0.85); charLight.position.y += 0.3; charLight.intensity = 1.5 * (1 - 0.55 * nightMix);
+    _cd.subVectors(cam.position, doughy.position).normalize(); charLight.position.copy(doughy.position).addScaledVector(_cd, 0.85); charLight.position.y += 0.3; charLight.intensity = 1.5 * (1 - 0.68 * nightMix);
     const bl = (t % 3.6) < 0.12 ? 1 - Math.abs((t % 3.6) - 0.06) / 0.06 : 0;
     if (dU.S.eye !== 'arc') dU.face.scale.y = 1 - 0.08 * bl;
     dU.hat.rotation.z = dU.S.hatTilt + Math.sin(t * 2.2) * 0.015;
