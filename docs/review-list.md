@@ -12,11 +12,11 @@ the menu page builds itself from it, and the home page takes its three
 The size table in the draft wins over the single prices at the top of the list
 whenever they differ (owner rule: price draft wins).
 
-- [ ] **Chocolate Bombolone** box of 6 uses Rs 210 / 222 from the size table,
+- [x] **Chocolate Bombolone** box of 6 used Rs 210 / 222 from the size table,
       not Rs 213 / 223 from the top of the list ("added Rs 20 packing").
-      **Creme brulee Bombolone** box of 6 uses Rs 162 / 168, not Rs 160 / 170.
-      Confirm which number the customer should see, and whether the Rs 20
-      packing is on top of the box price or already inside it.
+      **Creme brulee Bombolone** box of 6 used Rs 162 / 168, not Rs 160 / 170.
+      Settled by the cards of 2026-11-05: Chocolate Rs 106 / 213 eggless and
+      Rs 111 / 223 egg; Creme brulee Rs 81 / 162 eggless and Rs 120 / 238 egg.
 - [ ] **Brown butter chocolate chip** box of 8 is Rs 218 / 225 in both the
       size table and the top of the list, although the list says "added Rs 20
       packing". Confirm the box-of-8 price with packing.
@@ -28,20 +28,22 @@ whenever they differ (owner rule: price draft wins).
       one. Using Rs 436 / 447.
 - [ ] **Combo cookies** (two each of the four cookies, eight in the box,
       Rs 380 / 370) and **Blissful Bombolone** (three creme brulee, three
-      chocolate, Rs 272 / 281) replace the earlier "Overjoy" combo. Names are
+      chocolate, Rs 272 / 316 since the cards of 2026-11-05) replace the
+      earlier "Overjoy" combo. Names are
       the draft's; confirm the public names. The Rs 86 inside each combo is
       packaging + shipping; the cards say "includes packaging & delivery".
-- [ ] **Dropped because the new draft does not list them**: Customised filling
-      Bombolone, Biscoff cookies, Brownie slab (customised), Biscoff brownie.
-      Add back with prices if they are still sold.
+- [ ] **Dropped because the 2026-11-04 draft did not list them**: Biscoff
+      cookies and Biscoff brownie. (Customised fillings and the Brownie slab
+      came back on 2026-11-05 as price-on-request items.) Add the Biscoff
+      bakes back with prices if they are still sold.
 - [ ] **Fudge brownie, cookie pie, cookie tin** have one price each and no
       size; shown as "Each". Confirm per piece, per box or per slab, and the
       quantity.
-- [ ] **Croissants** are on the menu because they appear in four of the
-      supplied photos, but no draft has ever listed them. Names and prices are
-      invented: Classic butter croissants, box of 4, Rs 240 / 248; Chocolate
-      croissants, box of 4, Rs 320 / 332. The menu page flags the category
-      "to confirm". Confirm or remove.
+- [x] **Croissants** appear in four of the supplied photos but no draft or
+      card has listed them. Marked "Coming soon" on 2026-11-05: the photos
+      stay on the menu page, the builder's invented prices were removed, the
+      form does not offer them. To put them on sale, add prices in
+      `js/menu-data.js` and drop `soon: true`.
 - [ ] **One-line descriptions** under every item ("Nutty brown butter, dark
       chocolate chunks", "Custard filling, burnt-sugar top", and so on) and the
       category blurbs are the builder's guesses at what the bakes are.
@@ -56,10 +58,12 @@ whenever they differ (owner rule: price draft wins).
 - [ ] **WhatsApp number** +91 89996 50554 as supplied; confirm it is the
       business number she wants public.
 - [ ] **Instagram** https://www.instagram.com/batter_._dough/ as supplied.
-- [ ] **WhatsApp pre-filled messages**: the big buttons send "Hi Batter &
-      Dough! I'd like to order..."; each menu item's Order button sends
-      "Hi Batter & Dough! I'd like <item> (box of N), eggless/with egg."
-      Builder's wording; confirm the tone.
+- [ ] **WhatsApp messages**: since 2026-11-05 every Order button opens the
+      order form first and the message is composed from it (see the feedback
+      round below). The old one-line texts ("Hi Batter & Dough! I'd like
+      <item> (box of N), eggless/with egg.") remain only as the fallback on
+      the links for a browser without JavaScript. Builder's wording; confirm
+      the tone.
 
 ## Copy
 
@@ -158,3 +162,80 @@ whenever they differ (owner rule: price draft wins).
 - [ ] **Share preview** (WhatsApp, Instagram DMs): title "Batter & Dough ·
       Home bakery in Solapur", description and the hello frame as the image.
       Check how it looks the first time the link is shared; previews cache.
+
+## Feedback round (2026-11-05)
+
+Prices now come from the two menu cards supplied on 2026-11-05 ("Our menu"
+and "Know more about sizes"); they replace the draft of 2026-11-04 wherever
+the two differ. The 2026-11-04 bullets above are ticked where the cards
+settled them.
+
+- [x] **Croissants** are "Coming soon" (owner, 2026-11-05): the photos stay,
+      the invented prices are gone from `js/menu-data.js`, the category sits
+      last on the menu page and the order form does not offer it.
+- [x] **Bombolone prices from the cards**: Chocolate Rs 106 / 213 eggless and
+      Rs 111 / 223 egg; Creme brulee Rs 81 / 162 eggless and Rs 120 / 238 egg;
+      Blissful Bombolone Rs 272 eggless / 316 egg. Cookies and rolls unchanged.
+- [ ] **Price on request**: the cards list "Customized fillings" under
+      bombolone and "Brownie slab, contact for customisation" with no price.
+      Both are on the menu as "Price on request"; their Order button opens the
+      form, which lists them without an amount and leaves them out of the
+      estimated total. Confirm there is no base price to show.
+- [ ] **Size names**: the cards say Small / Medium / Large; the site keeps
+      "Box of 4 / 6 / 8" and so on, the cards' own counts. Builder's call.
+- [ ] **"Brownies, pie and tin"** stays one section although the card has
+      three headings with one or two lines each. Builder's call.
+- [ ] **Order form** (opens from every Order button, before WhatsApp): bake,
+      box size, eggless / with egg, quantity 1 to 20, "Add another bake";
+      "Needed on" (earliest tomorrow, defaults to tomorrow); "Deliver in
+      Solapur" (address or area required) or "I'll pick up"; "Your name"
+      (required); "Anything else?" (optional). Doughy's line at the top is
+      "Tell me what you'd like, and when." The fields and all wording are the
+      builder's; say what else the baker needs (a phone number? a time of
+      day? an occasion?).
+- [ ] **A day's notice** is enforced by the date picker (earliest tomorrow).
+      Builder's reading of "order a day ahead"; lower it if same-day orders
+      are ever taken.
+- [ ] **"We'll confirm the total and any delivery charge on WhatsApp."** sits
+      under the estimate, and the message says "Estimated total". Builder's
+      wording; it assumes a delivery charge may apply (see Delivery area).
+- [ ] **The composed message**: "Hi Batter & Dough! I'd like to order:", one
+      bullet per bake (name, size, egg choice, quantity, price), "Needed on:
+      Fri, 7 Nov 2026", "Delivery to: ..." or "Pickup from the bakery",
+      "Name:", "Notes:" (only if given), "Estimated total: Rs N" ("plus the
+      items on request" when a price-on-request bake is in the order).
+      Builder's format; nothing is stored anywhere, the form is client-side
+      only.
+- [ ] **Doughy's opening line** at rest, typed by time about a second after
+      the title lands: "Hi! I'm Doughy. Scroll down and watch me bake ↓"
+      (replaces "Hi! I'm Doughy. I bake everything here. Come, watch."). The
+      italic kicker lost its "scroll" sentence on every width. The still page
+      (no WebGL, reduced motion) has no bubble; its kicker is unchanged.
+      Builder's wording.
+- [x] **Recipe chips are buttons** now: tapping Mix / Roll / Bake / Box takes
+      the journey to that station (people were tapping them anyway; owner,
+      2026-11-05).
+- [ ] **Scroll pace** of the arrow button, the chips and the night cards:
+      1.2 s to 4 s depending on the distance, eased, cancelled by any wheel,
+      touch or key. The arrow lands at the start of the mixer hold. Builder's
+      numbers; say if it still feels fast, or now feels slow.
+- [ ] **Night spotlight** (owner, 2026-11-05: the light was on Doughy's face
+      and the bakes looked scrambled): one narrow cone per bake aimed at the
+      counter; only the featured bake is lit during its close-up, all three
+      during "Lights down" and at the very end; the room, the pendants and
+      Doughy's own light drop so he is visible but not the subject; the
+      close-ups look down from the front-right so the pieces separate; the
+      bowl of dough leaves the island as the lights go down. Builder's tuning;
+      check on a real phone that Doughy is not a silhouette.
+- [x] **The leaning cookie** was a design choice (a cookie propped on its
+      edge to show its chips) that read as broken; it now lies flat on the
+      plate in front of the stack (owner, 2026-11-05).
+- [ ] **Dark mode** (owner's request, 2026-11-05) follows the phone's
+      light/dark setting; the sun / moon button in the nav overrides it and
+      the choice is remembered on that device. Palette (builder's call): page
+      #1F1410, panels #2A1B15, cards #2E1F19, text #F3E7DA, italic accents
+      #E8AC8E; the WhatsApp pill inverts to cream on dark; the kitchen keeps
+      its daylight (dark mode is the page, not the time of day), so the big
+      "Batter & Dough" title and the kicker stay cocoa on the kitchen. The
+      404 page and the order form follow the theme. Confirm the look on a
+      phone in dark mode.

@@ -4,8 +4,13 @@ The website of Batter & Dough, a home bakery in Solapur. Live at
 **https://batteranddough.github.io**.
 
 Two pages: the home page, where Doughy bakes the morning's batch as you
-scroll, and the menu, where every bake is listed with eggless and egg prices
-and an "Order" button that opens WhatsApp with the item typed in.
+scroll, and the menu, where every bake is listed with eggless and egg prices.
+Every "Order" button opens a short order form (bakes, sizes, quantities, the
+day it is needed, delivery or pickup, a name) and then WhatsApp with the
+order typed in. Nothing is stored; the form only composes the message.
+
+Light or dark follows the visitor's phone; the sun / moon button in the nav
+overrides it and remembers the choice on that device.
 
 Static files only. Pushing to `main` publishes the site (GitHub Pages).
 
@@ -24,6 +29,14 @@ items: [
 
 Change the numbers, save, commit, push. Whole rupees only. Both pages read
 from this file, so the "from ₹" lines on the home page follow automatically.
+
+**Coming soon**: put `soon: true` on a category (and remove its prices). Its
+cards keep their photos but show "Coming soon" instead of prices and an
+Order button, the category sorts last, and the order form leaves it out.
+
+**Price on request**: an item with `ask: true` and no `eggless` / `egg`
+arrays shows "Price on request"; its Order button opens the form, which
+lists it without an amount.
 
 ## Adding a product photo
 
@@ -53,7 +66,9 @@ check scripts.
 |------|------|
 | `index.html`, `css/home.css`, `js/home.js`, `js/kitchen.js` | the home page and the journey |
 | `menu.html`, `css/menu.css`, `js/menu.js` | the menu page |
-| `css/site.css` | colours, fonts, nav, pills, footer shared by every page |
+| `css/site.css` | colours (light and dark), fonts, nav, pills, footer shared by every page |
+| `js/order.js`, `css/order.css` | the order form, shared by both pages |
+| `js/theme.js` | light / dark: follows the system, the nav toggle, the saved choice |
 | `js/menu-data.js` | **prices, names, photos** |
 | `photos/` | product photos, thumbnails, Doughy renders |
 | `vendor/` | pinned copies of three.js and GSAP |
