@@ -30,7 +30,9 @@ Output PNGs go to `tools/out/` (gitignored).
 | Thumbnails, small Doughy renders and icons | `python -I tools/images.py` |
 
 `shoot.js` drives the journey through `window.BD.snap(p)` so a frame is
-rendered at an exact progress value without scrolling.
+rendered at an exact progress value without scrolling. Headless Edge follows
+the machine's light/dark setting, and so does the site; set `THEME=light` or
+`THEME=dark` to pin it for `shoot.js` and `check-home.js`.
 
 ## Vendored libraries
 

@@ -17,6 +17,8 @@ function watch(page, errs, tag) {
 
 // the page is "up" when the kitchen drew its first frame, or when a fallback class is on <body>
 async function open(page, url) {
+  // headless Edge follows the OS colour scheme; THEME=light|dark pins it so shots are reproducible
+  if (process.env.THEME) await page.emulateMediaFeatures([{ name: 'prefers-color-scheme', value: process.env.THEME }]);
   await page.goto(url, { waitUntil: 'networkidle0', timeout: 90000 });
   await page.waitForFunction(() => {
     const c = document.getElementById('kitchen');
