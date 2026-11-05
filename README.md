@@ -1,7 +1,8 @@
 # Batter & Dough
 
 The website of Batter & Dough, a home bakery in Solapur. Live at
-**https://batteranddough.github.io**.
+**https://batterndough.in** (GitHub Pages; the old address
+https://batteranddough.github.io forwards there).
 
 Two pages: the home page, where Doughy bakes the morning's batch as you
 scroll, and the menu, where every bake is listed with eggless and egg prices.

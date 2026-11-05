@@ -17,7 +17,7 @@ function jpegSize(buf) {
 }
 
 (async () => {
-  const SITE = 'https://batteranddough.github.io/';
+  const SITE = 'https://batterndough.in/';
   const pages = [
     ['index.html', 'Batter &amp; Dough · Home bakery in Solapur', SITE],
     ['menu.html', 'Batter &amp; Dough · Menu', SITE + 'menu.html']

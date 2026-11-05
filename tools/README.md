@@ -18,7 +18,7 @@ Output PNGs go to `tools/out/` (gitignored).
 | What | Command |
 |------|---------|
 | Journey frames at chosen scroll positions (0..1), phone and desktop, contact sheets | `node tools/shoot.js index.html h 0,0.05,0.33,0.6,0.655,0.72,0.85,0.95,0.995 desktop,phone tail` |
-| Same against the live site | `node tools/shoot.js https://batteranddough.github.io/ live 0.05,0.72 phone` |
+| Same against the live site | `node tools/shoot.js https://batterndough.in/ live 0.05,0.72 phone` |
 | Static page viewport shots at anchors | `node tools/view.js menu.html m phone top,#cookies,#croissants,bottom` |
 | Menu checks (scroll-to-top, deep link, lightbox, coming soon, price on request, the order form and its message) | `node tools/check-menu.js menu.html` |
 | Home checks (fallbacks, odd viewports, Doughy's scroll line, the arrow and chips, the order form); `ONLY=h,i` runs a subset | `node tools/check-home.js index.html` |

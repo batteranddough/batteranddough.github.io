@@ -114,8 +114,14 @@ whenever they differ (owner rule: price draft wins).
 
 - [ ] **Repository visibility** switched to public on 2026-11-04 (needed for
       GitHub Pages).
-- [ ] **Custom domain**: none for now; site lives at
-      https://batteranddough.github.io.
+- [ ] **Custom domain**: https://batterndough.in since 2026-11-05, bought
+      at Hostinger (batteranddough.in was already taken). DNS lives in
+      hPanel: 4 A + 4 AAAA records to GitHub Pages, `www` CNAME to
+      batteranddough.github.io, and the org's verification TXT
+      `_github-pages-challenge-batteranddough`. The repo's `CNAME` file holds
+      the domain. Renewal is $9.99 + GST at Hostinger in November 2027;
+      moving it to a cheaper registrar (Spaceship renews .in at about $6)
+      before then is the owner's call.
 - [ ] **Egg icons.** The eggless/with-egg switch and the label on every menu
       card are icons, not words: a crossed-out egg in green for eggless, a
       whole egg in red-brown for with egg (the Indian veg/non-veg colour
@@ -132,7 +138,7 @@ whenever they differ (owner rule: price draft wins).
 ## Launch (build of 2026-11-04)
 
 - [x] **Live URL**: https://batteranddough.github.io (menu at /menu.html),
-      live since 2026-11-04. Pushing `main` publishes within a minute; there
+      live since 2026-11-04; https://batterndough.in since 2026-11-05. Pushing `main` publishes within a minute; there
       is no staging copy.
 - [ ] **Real-phone pass** is the owner's: scroll the whole journey both ways
       on an Android in Chrome and an iPhone in Safari, open the menu, tap a
