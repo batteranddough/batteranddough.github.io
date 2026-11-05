@@ -1,10 +1,18 @@
 /* Batter & Dough: shared tokens, nav, pills and footer. Loaded first on every page. */
+/* Light by default; the dark palette applies when the system asks for it (and nothing was chosen) or when the visitor
+   chose it (html[data-theme="dark"]). Pages use the tokens, so one block carries the whole switch:
+   --cream/--paper/--card are surfaces, --cocoa is text (and the pill, which inverts), --ink-rgb and --veil-rgb feed
+   the translucent borders and panels, --accent the italic brown, --foot-* the footer. */
 :root {
-  --cream:#FFF9F3; --paper:#FBF1E6; --blush:#F7CFD6; --mint:#CDEBDC; --butter:#FAEBB4;
-  --cocoa:#5A2E1C; --choc:#3B1F14; --pink:#E98A9A; --mist:#9A7B6A;
+  --cream:#FFF9F3; --paper:#FBF1E6; --card:#FFFFFF; --blush:#F7CFD6; --mint:#CDEBDC; --butter:#FAEBB4;
+  --cocoa:#5A2E1C; --choc:#3B1F14; --pink:#E98A9A; --mist:#9A7B6A; --accent:#8A4A30;
+  --ink-rgb:90,46,28; --veil-rgb:255,249,243; --foot-bg:#5A2E1C; --foot-ink:#FBF1E6; --err-bg:#FBE3DF; --err-ink:#8A2E1E;
   --head:"Fraunces", Georgia, serif; --body:"Nunito", system-ui, sans-serif; --script:"Caveat", cursive;
   --glass: rgba(255,249,243,.72); --glass-border: rgba(90,46,28,.14);
+  color-scheme:light;
 }
+:root[data-theme="dark"] { --cream:#1F1410; --paper:#2A1B15; --card:#2E1F19; --cocoa:#F3E7DA; --choc:#FFF4E8; --mist:#B9A08E; --accent:#E8AC8E; --ink-rgb:243,231,218; --veil-rgb:42,27,21; --foot-bg:#140C09; --foot-ink:#E9DACB; --err-bg:#4A1F18; --err-ink:#F5B8A9; --glass:rgba(42,27,21,.72); --glass-border:rgba(243,231,218,.16); color-scheme:dark; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --cream:#1F1410; --paper:#2A1B15; --card:#2E1F19; --cocoa:#F3E7DA; --choc:#FFF4E8; --mist:#B9A08E; --accent:#E8AC8E; --ink-rgb:243,231,218; --veil-rgb:42,27,21; --foot-bg:#140C09; --foot-ink:#E9DACB; --err-bg:#4A1F18; --err-ink:#F5B8A9; --glass:rgba(42,27,21,.72); --glass-border:rgba(243,231,218,.16); color-scheme:dark; } }
 * { box-sizing:border-box; }
 a { color:inherit; }
 button { font:inherit; color:inherit; cursor:pointer; background:none; border:0; padding:0; }
@@ -18,7 +26,14 @@ em { font-family:var(--head); font-style:italic; font-weight:500; }
 .pill { display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:11px 18px; border-radius:999px; font-weight:800; font-size:14px; text-decoration:none; border:0; cursor:pointer; font-family:var(--body); }
 .pill.pri { background:var(--cocoa); color:var(--cream); }
 .pill.wa { background:var(--cocoa); color:var(--cream); }
-footer a { color:var(--cream); text-decoration:none; }
+/* the theme toggle: a round glass button in every nav */
+.nav-r { display:flex; align-items:center; gap:8px; }
+.theme { width:38px; height:38px; border-radius:50%; flex:none; display:grid; place-items:center; background:var(--glass); border:1px solid var(--glass-border); color:inherit; backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }
+.theme svg { width:18px; height:18px; display:block; }
+.theme .moon { display:none; }
+:root[data-theme="dark"] .theme .sun { display:none; } :root[data-theme="dark"] .theme .moon { display:block; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .theme .sun { display:none; } :root:not([data-theme="light"]) .theme .moon { display:block; } }
+footer a { color:var(--foot-ink); text-decoration:none; }
 footer h4 { margin:0 0 8px; font-weight:800; font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--blush); }
 footer .fb { font-family:var(--script); font-weight:700; font-size:30px; line-height:1; margin-bottom:8px; }
 footer .copy { grid-column:1/-1; display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; padding-top:16px; border-top:1px solid rgba(255,249,243,.15); font-size:12px; opacity:.8; }
