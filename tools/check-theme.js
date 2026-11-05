@@ -29,6 +29,7 @@ let browser;
     ink: getComputedStyle(document.body).color,
     meta: (document.querySelector('meta[name="theme-color"]') || {}).content,
     toggle: !!document.getElementById('theme'),
+    sbw: getComputedStyle(document.documentElement).scrollbarWidth, sbc: getComputedStyle(document.documentElement).scrollbarColor,
     label: (document.getElementById('theme') || {}).getAttribute && document.getElementById('theme').getAttribute('aria-label'),
     stored: (function () { try { return localStorage.getItem('theme'); } catch (e) { return 'n/a'; } })()
   }));
@@ -47,6 +48,7 @@ let browser;
     assert(lum(s.ink) > 0.6, file + ': dark page text should be light, was ' + s.ink);
     assert(/Switch to light/i.test(s.label || ''), file + ': in dark mode the toggle should offer light mode, label was ' + s.label);
     assert(s.meta && s.meta.toLowerCase() !== '#fff9f3', file + ': theme-color should follow the dark palette, was ' + s.meta);
+    assert(s.sbw === 'thin' && s.sbc && s.sbc !== 'auto', file + ': the page scrollbar should be thin and in the house colours, got width ' + s.sbw + ' colour ' + s.sbc);
     await page.screenshot({ path: path.join(OUT, 'dark-' + file.replace('.html', '') + '-phone.png') });
     // 2. the toggle switches to light and the choice survives a reload
     await page.click('#theme'); await sleep(300);

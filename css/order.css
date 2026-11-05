@@ -10,16 +10,34 @@
 .od-who { margin:0 0 2px; font-weight:800; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--mist); }
 .od-head h2 { margin:0; font-family:var(--script); font-weight:700; font-size:24px; line-height:1.05; }
 .od-x { margin-left:auto; flex:none; width:38px; height:38px; border-radius:50%; background:rgba(var(--ink-rgb),.08); display:grid; place-items:center; font-size:15px; }
-.od-body { overflow:auto; padding:14px 16px 16px; display:grid; gap:14px; }
+.od-body { overflow:auto; padding:14px 16px 16px; display:grid; gap:14px; scrollbar-width:none; }
+.od-body::-webkit-scrollbar { display:none; }
 .od-lab { margin:0 0 2px; font-weight:800; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--mist); }
 .od-rows { display:grid; gap:8px; }
 .row { display:grid; grid-template-columns:1fr auto; gap:8px; padding:10px; border-radius:14px; background:var(--card, #fff); border:1px solid var(--glass-border); align-items:center; }
 .row-opts { grid-column:1 / -1; display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
 .od select, .od input, .od textarea { font:inherit; color:inherit; background:var(--card, #fff); border:1px solid rgba(var(--ink-rgb),.28); border-radius:12px; padding:9px 12px; min-width:0; }
 .od select:focus, .od input:focus, .od textarea:focus { outline:2px solid var(--pink); outline-offset:1px; }
+/* one-line boxes share one height, so swapping the address box for the pickup note moves nothing */
+.od input[type=text], .od input[type=date], .od select.bake, .od-pick { box-sizing:border-box; height:44px; }
 .od .bad { outline:2px solid #B5432E; }
 .od select.bake { width:100%; font-weight:700; }
-.od select.size[hidden] { display:none; }
+/* box size: a segmented row, like the egg choice */
+.sseg { display:inline-flex; background:var(--card, #fff); border:1px solid rgba(var(--ink-rgb),.28); border-radius:999px; padding:3px; gap:3px; }
+.sseg[hidden] { display:none; }
+.sseg button { padding:6px 11px; border-radius:999px; font-weight:800; font-size:12px; white-space:nowrap; }
+.sseg button.on { background:var(--cocoa); color:var(--cream); }
+/* the bake dropdown: a styleable picker where the browser has one (Chromium 135+); elsewhere the native list, in the page's colour scheme */
+.od select.bake, .od select.bake::picker(select) { appearance:base-select; }
+.od select.bake { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+.od select.bake::picker-icon { content:""; width:9px; height:9px; border:solid currentColor; border-width:0 2px 2px 0; transform:translateY(-2px) rotate(45deg); flex:none; margin-left:auto; }
+.od select.bake::picker(select) { background:var(--card, #fff); color:var(--cocoa); border:1px solid var(--glass-border); border-radius:14px; padding:6px; margin:6px 0; box-shadow:0 24px 60px -24px rgba(59,31,20,.7); max-height:min(60vh, 440px); overflow:auto; scrollbar-width:thin; font:inherit; }
+.od select.bake optgroup { padding:0; }
+.od select.bake optgroup::label, .od select.bake optgroup > legend { display:block; padding:9px 10px 4px; margin:0; font-weight:800; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--mist); }
+.od select.bake option { display:flex; align-items:center; gap:8px; padding:8px 12px 8px 18px; border-radius:10px; font-weight:700; cursor:pointer; }
+.od select.bake option::checkmark { display:none; }
+.od select.bake option:hover, .od select.bake option:focus-visible { background:rgba(var(--ink-rgb),.08); outline:none; }
+.od select.bake option:checked { background:var(--cocoa); color:var(--cream); }
 .row .remove { width:34px; height:34px; border-radius:50%; background:rgba(var(--ink-rgb),.08); font-size:13px; }
 .row .remove[hidden] { display:none; }
 .eseg { display:inline-flex; background:var(--card, #fff); border:1px solid rgba(var(--ink-rgb),.28); border-radius:999px; padding:3px; gap:3px; }
@@ -38,7 +56,21 @@
 .od-f > span em { font-family:inherit; font-style:normal; font-weight:600; text-transform:none; letter-spacing:0; opacity:.8; }
 .od-f small { font-size:11px; color:var(--mist); }
 .od-wide { grid-column:1 / -1; }
-.od.pickup .od-addrf { display:none; }
+/* the day strip: a row of chips, tomorrow first; "Later" reveals the native input for a day beyond the strip */
+.od-days { display:flex; gap:6px; overflow-x:auto; scrollbar-width:none; padding:2px; margin:0 -2px; scroll-snap-type:x proximity; -webkit-overflow-scrolling:touch; }
+.od-days::-webkit-scrollbar { display:none; }
+.od-days button { flex:none; display:grid; gap:2px; text-align:center; padding:7px 11px; border-radius:12px; border:1px solid rgba(var(--ink-rgb),.28); background:var(--card, #fff); font-weight:800; font-size:13px; line-height:1.1; scroll-snap-align:start; }
+.od-days button b { font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:var(--mist); }
+.od-days button.on { background:var(--cocoa); color:var(--cream); border-color:var(--cocoa); }
+.od-days button.on b { color:inherit; opacity:.8; }
+#od-date { margin-top:6px; justify-self:start; }
+#od-date[hidden] { display:none; }
+/* pickup keeps the address cell, so nothing jumps: the box gives way to a note */
+.od-f > .od-pick { display:none; align-items:center; padding:0 12px; border-radius:12px; background:var(--paper); border:1px dashed rgba(var(--ink-rgb),.3); font-size:12.5px; line-height:1.2; font-weight:600; letter-spacing:0; text-transform:none; color:var(--mist); }
+.od .pk { display:none; }
+.od.pickup .od-addrf input, .od.pickup .od-addrf .dl { display:none; }
+.od.pickup .od-addrf .od-pick { display:flex; }
+.od.pickup .od-addrf .pk { display:block; }
 .mode { display:inline-flex; background:var(--card, #fff); border:1px solid rgba(var(--ink-rgb),.28); border-radius:999px; padding:3px; gap:3px; }
 .mode button { padding:7px 12px; border-radius:999px; font-weight:800; font-size:12px; white-space:nowrap; }
 .mode button.on { background:var(--cocoa); color:var(--cream); }

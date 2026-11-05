@@ -37,3 +37,9 @@ footer a { color:var(--foot-ink); text-decoration:none; }
 footer h4 { margin:0 0 8px; font-weight:800; font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--blush); }
 footer .fb { font-family:var(--script); font-weight:700; font-size:30px; line-height:1; margin-bottom:8px; }
 footer .copy { grid-column:1/-1; display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; padding-top:16px; border-top:1px solid rgba(255,249,243,.15); font-size:12px; opacity:.8; }
+/* the page scrollbar: thin and in the house colours (scrollbar-color in Chromium 121+ and Firefox; the pseudo-elements for older WebKit) */
+html { scrollbar-width:thin; scrollbar-color:rgba(var(--ink-rgb),.38) var(--cream); }
+::-webkit-scrollbar { width:8px; height:8px; }
+::-webkit-scrollbar-track { background:var(--cream); }
+::-webkit-scrollbar-thumb { background:rgba(var(--ink-rgb),.38); border-radius:999px; }
+::-webkit-scrollbar-thumb:hover { background:rgba(var(--ink-rgb),.55); }
