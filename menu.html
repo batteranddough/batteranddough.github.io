@@ -22,6 +22,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;0,9..144,900;1,9..144,500&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/site.css">
 <link rel="stylesheet" href="css/menu.css">
+<link rel="stylesheet" href="css/order.css">
 </head>
 <body>
 <div class="grain" aria-hidden="true"></div>
@@ -32,7 +33,7 @@
     <li><a href="index.html">Home</a></li>
     <li><a href="#footer">Contact</a></li>
   </ul>
-  <a class="pill wa" href="https://wa.me/918999650554" target="_blank" rel="noopener">Order on WhatsApp</a>
+  <a class="pill wa" href="https://wa.me/918999650554" target="_blank" rel="noopener" data-order="">Order on WhatsApp</a>
 </nav>
 
 <header class="mhero">
@@ -61,11 +62,12 @@
   <div class="copy"><span>© Batter &amp; Dough</span><span>Prices as of 5 Nov 2026.</span></div>
 </footer>
 
-<div class="orderbar"><a class="pill wa" href="https://wa.me/918999650554?text=Hi%20Batter%20%26%20Dough!%20I'd%20like%20to%20order..." target="_blank" rel="noopener">Order on WhatsApp</a></div>
+<div class="orderbar"><a class="pill wa" href="https://wa.me/918999650554?text=Hi%20Batter%20%26%20Dough!%20I'd%20like%20to%20order..." target="_blank" rel="noopener" data-order="">Order on WhatsApp</a></div>
 
 <div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Photo"><button type="button" class="lbx" id="lbx" aria-label="Close">&#x2715;</button><div class="lbs" id="lbs"></div><p class="lbc" id="lbc"></p></div>
 
 <script src="js/menu-data.js"></script>
 <script src="js/menu.js"></script>
+<script src="js/order.js"></script>
 </body>
 </html>

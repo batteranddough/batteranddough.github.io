@@ -2,6 +2,7 @@
 // 1 opens at the top  2 a category hash lands on that section with its chip active
 // 3 an item's Order link carries the item, size and egg choice  4 a photo opens the lightbox
 // 5 croissants are coming soon (last, photos, no prices, no Order)  6 prices follow the 2026-11-05 cards; price-on-request items
+// 7 an item's Order button opens the order form prefilled; the form composes the WhatsApp message
 const puppeteer = require('puppeteer-core'); const path = require('path');
 const EDGE = 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe';
 const target = process.argv[2] || 'menu.html';
@@ -76,6 +77,47 @@ let browser;
   assert(data.fill && /Price on request/.test(data.fill.ask || '') && data.fill.order === 1, 'Customised fillings should show "Price on request" and an Order button, was ' + JSON.stringify(data.fill));
   assert(data.bb && data.bb.dataOrder === 'cookies:0', 'an Order button should name its item for the form, was ' + JSON.stringify(data.bb));
   assert(/5 Nov 2026/.test(data.date), 'the menu footer should date the prices 5 Nov 2026, was "' + data.date + '"');
+
+  // 7. the order form: opened from an item after switching to egg, two rows, quantities, date, delivery, name, notes
+  await page.click('.seg button[data-e="1"]'); await sleep(200);
+  await page.evaluate(() => { window.__opened = []; window.open = function (u) { window.__opened.push(u); return {}; }; });
+  await page.click('#cookies .item .act [data-order]'); await sleep(400);
+  const od0 = await page.evaluate(() => {
+    const od = document.getElementById('order'); if (!od) return null;
+    const row = od.querySelector('.row');
+    return { shown: !od.hidden && getComputedStyle(od).display !== 'none', rows: od.querySelectorAll('.row').length, bake: row.querySelector('select.bake').value, size: row.querySelector('select.size').value, egg: (row.querySelector('.eseg button.on') || {}).getAttribute && row.querySelector('.eseg button.on').getAttribute('data-e'), qty: row.querySelector('input.qty').value,
+      croissant: !!od.querySelector('select.bake option[value^="croissants:"]'), ask: !!od.querySelector('select.bake option[value="more:1"]'), dateMin: document.getElementById('od-date').min, dateVal: document.getElementById('od-date').value, focus: document.activeElement && document.activeElement.tagName, overflow: document.body.style.overflow };
+  });
+  assert(od0 && od0.shown, 'tapping an Order button should open the order form');
+  assert(od0.rows === 1 && od0.bake === 'cookies:0' && od0.size === '0' && od0.egg === '1' && od0.qty === '1', 'the form should open with that item, its first size and the page\'s egg choice, got ' + JSON.stringify(od0));
+  assert(!od0.croissant, 'coming-soon croissants must not be offered in the form');
+  assert(od0.ask, 'price-on-request items should be offered in the form');
+  const tomorrow = (() => { const d = new Date(); d.setDate(d.getDate() + 1); const p = n => (n < 10 ? '0' : '') + n; return { iso: d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()), text: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][d.getDay()] + ', ' + d.getDate() + ' ' + ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][d.getMonth()] + ' ' + d.getFullYear() }; })();
+  assert(od0.dateMin === tomorrow.iso && od0.dateVal === tomorrow.iso, 'the date should default to tomorrow and allow nothing earlier, got min ' + od0.dateMin + ' value ' + od0.dateVal);
+  assert(od0.focus === 'SELECT', 'focus should land on the first field, was on ' + od0.focus);
+  assert(od0.overflow === 'hidden', 'the page behind the form should not scroll');
+  await page.select('#order .row select.size', '1'); await page.click('#order .row .plus'); await sleep(100);
+  await page.click('#od-add'); await sleep(200);
+  await page.select('#order .row:nth-child(2) select.bake', 'combos:1'); await sleep(100);
+  await page.type('#od-name', 'Aisha'); await page.type('#od-addr', 'Sadar Bazar'); await page.type('#od-notes', 'candles please');
+  const sum = await page.evaluate(() => ({ rows: document.querySelectorAll('#order .row').length, total: document.getElementById('od-total').textContent, text: window.BD_ORDER.compose() }));
+  assert(sum.rows === 2, 'Add another bake should add a second row, rows were ' + sum.rows);
+  assert(/652/.test(sum.total), 'the estimated total should be 2 x 168 + 316 = 652 with egg, was "' + sum.total + '"');
+  const want = ["Hi Batter & Dough! I'd like to order:", "\u2022 Brown butter chocolate chip \u00b7 box of 6 \u00b7 with egg \u00b7 \u00d72 \u00b7 \u20b9336", "\u2022 Blissful Bombolone \u00b7 combo \u00b7 with egg \u00b7 \u00d71 \u00b7 \u20b9316", 'Needed on: ' + tomorrow.text, 'Delivery to: Sadar Bazar', 'Name: Aisha', 'Notes: candles please', 'Estimated total: \u20b9652'];
+  assert(sum.text === want.join('\n'), 'composed message differs:\n' + sum.text + '\n--- wanted ---\n' + want.join('\n'));
+  await page.click('#od-send'); await sleep(400);
+  const sent = await page.evaluate(() => ({ urls: window.__opened, hidden: document.getElementById('order').hidden, overflow: document.body.style.overflow }));
+  assert(sent.urls.length === 1 && sent.urls[0].indexOf('https://wa.me/918999650554?text=') === 0, 'Send should open WhatsApp once, opened ' + JSON.stringify(sent.urls));
+  assert(decodeURIComponent(sent.urls[0].split('text=')[1]) === want.join('\n'), 'the WhatsApp link should carry the composed message intact');
+  assert(sent.hidden && sent.overflow === '', 'the form should close after sending and give the page its scroll back');
+  // a form with no name does not send
+  await page.click('#cookies .item .act [data-order]'); await sleep(300);
+  await page.evaluate(() => { document.getElementById('od-name').value = ''; });
+  await page.click('#od-send'); await sleep(300);
+  const blocked = await page.evaluate(() => ({ urls: window.__opened.length, hidden: document.getElementById('order').hidden }));
+  assert(blocked.urls === 1 && !blocked.hidden, 'without a name the form should stay open and not send');
+  await page.keyboard.press('Escape'); await sleep(200);
+  assert(await page.evaluate(() => document.getElementById('order').hidden), 'Escape should close the form');
 
   assert(errs.length === 0, 'console errors: ' + errs.join(' | '));
   console.log('menu checks: ok');

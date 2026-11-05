@@ -22,6 +22,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;0,9..144,900;1,9..144,500;1,9..144,700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/site.css">
 <link rel="stylesheet" href="css/home.css">
+<link rel="stylesheet" href="css/order.css">
 </head>
 <body>
 <div class="grain" aria-hidden="true"></div>
@@ -32,7 +33,7 @@
     <li><a href="menu.html">Full menu</a></li>
     <li><a href="#footer">Contact</a></li>
   </ul>
-  <a class="pill wa" href="https://wa.me/918999650554" target="_blank" rel="noopener"><span><span class="long">Order on </span>WhatsApp</span></a>
+  <a class="pill wa" href="https://wa.me/918999650554" target="_blank" rel="noopener" data-order=""><span><span class="long">Order on </span>WhatsApp</span></a>
 </nav>
 
 <!-- ================= THE JOURNEY: one kitchen, one scroll ================= -->
@@ -49,7 +50,7 @@
     <div id="l1extras" style="position:absolute;inset:0;pointer-events:none">
       <aside class="rstack" aria-label="Quick menu" style="pointer-events:auto">
         <a class="ritem glass" href="menu.html"><span class="ic">₹</span>Full menu<span class="chev">›</span></a>
-        <a class="ritem glass" href="https://wa.me/918999650554" target="_blank" rel="noopener"><span class="ic">💬</span>Order<span class="chev">›</span></a>
+        <a class="ritem glass" href="https://wa.me/918999650554" target="_blank" rel="noopener" data-order=""><span class="ic">💬</span>Order<span class="chev">›</span></a>
         <a class="ritem glass" href="https://www.instagram.com/batter_._dough/" target="_blank" rel="noopener"><span class="ic">📷</span>Instagram<span class="chev">›</span></a>
       </aside>
     </div>
@@ -107,6 +108,7 @@
 <script src="vendor/gsap/gsap.min.js"></script>
 <script src="vendor/gsap/ScrollTrigger.min.js"></script>
 <script src="js/menu-data.js"></script>
+<script src="js/order.js" defer></script>
 
 <!-- ============ DOM behaviour, scroll progress and text layers (works without WebGL) ============ -->
 <script src="js/home.js"></script>
