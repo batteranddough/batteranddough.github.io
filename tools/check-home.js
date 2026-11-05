@@ -6,7 +6,11 @@
 // (e) rotating a tablet across the 900 px breakpoint mid-journey keeps the cards on screen
 // (f) the kitchen module cannot load (three.js fetch fails, or no import-map support): still page
 // (g) css contract: the stage is 100lvh, the overlay layers 100svh (phone toolbar collapse leaves no strip)
+// (h) at rest Doughy types the scroll hint by himself; the kicker no longer says "scroll"
+// (i) the arrow button scrolls slowly (a tween over seconds) to the mixer hold; any wheel input stops it
+// (j) the Mix / Roll / Bake / Box chips are buttons that take the journey to that station
 // Every case runs; failures are listed at the end and the exit code is 1 if any failed.
+// ONLY=h,i runs just those cases.
 const path = require('path'), fs = require('fs');
 const { resolve } = require('./target');
 const { launch, watch, open, gotoProgress, sleep } = require('./frame');
@@ -15,7 +19,9 @@ const target = process.argv[2] || 'index.html';
 function assert(cond, msg) { if (!cond) throw new Error(msg); }
 const PHONE = { width: 390, height: 844, deviceScaleFactor: 2, isMobile: true, hasTouch: true };
 const failures = [];
+const only = process.env.ONLY ? process.env.ONLY.split(',') : null;
 async function step(name, fn) {
+  if (only && !only.some(k => name.indexOf('(' + k + ')') === 0)) return;
   let browser;
   try { browser = await launch(fn.args); await fn(browser); console.log('ok   ' + name); }
   catch (e) { failures.push(name + ': ' + e.message); console.log('FAIL ' + name + ': ' + e.message); }
@@ -155,6 +161,53 @@ async function step(name, fn) {
     assert(/height:100lvh/.test(stage) && !/100svh/.test(stage), '.stage should be 100lvh tall (not svh), rule was: ' + stage.trim());
     assert(/height:100svh/.test(layer) && /bottom:auto/.test(layer), '.layer should be 100svh tall from the top, rule was: ' + layer.trim());
     assert(/^body\.static \.layer \{[^}]*height:auto/m.test(css), 'the static page should let layers size to their content');
+  });
+
+  await step('(h) Doughy says scroll at rest', async (browser) => {
+    for (const [name, vp] of [['desk', { width: 1280, height: 800, deviceScaleFactor: 1 }], ['phone', PHONE]]) {
+      const page = await browser.newPage(); const errs = []; watch(page, errs, name);
+      await page.setViewport(vp); await open(page, url); await sleep(3200);
+      const r = await page.evaluate(() => ({ p: window.BD.p, op: +getComputedStyle(document.getElementById('say')).opacity, text: document.getElementById('saytext').textContent, cur: !!document.querySelector('#saytext .cur'), kicker: document.getElementById('kicker').textContent }));
+      assert(r.p < 0.001, name + ': the page should still be at rest, p was ' + r.p);
+      assert(r.op > 0.9, name + ': the bubble should be showing before any scroll, opacity was ' + r.op);
+      assert(r.text === "Hi! I'm Doughy. Scroll down and watch me bake ↓" && !r.cur, name + ': Doughy should have typed the scroll hint by now, bubble read "' + r.text + '"');
+      assert(!/scroll/i.test(r.kicker), name + ': the kicker should leave the scroll hint to Doughy, it read "' + r.kicker + '"');
+      await page.screenshot({ path: path.join(OUT, 'rest-' + name + '.png') });
+      assert(errs.length === 0, name + ' errors: ' + errs.join(' | '));
+      await page.close();
+    }
+  });
+
+  await step('(i) the arrow button scrolls slowly and yields to the visitor', async (browser) => {
+    const page = await browser.newPage(); const errs = []; watch(page, errs, 'arrow');
+    await page.setViewport({ width: 1280, height: 800, deviceScaleFactor: 1 }); await open(page, url); await sleep(1500);
+    await page.click('#scrollbtn'); await sleep(500);
+    const mid = await page.evaluate(() => ({ p: window.BD.p, y: window.scrollY }));
+    assert(mid.y > 0 && mid.p < 0.12, 'half a second after the tap the journey should be under way but nowhere near the mixer, scrollY was ' + mid.y + ' and p ' + mid.p.toFixed(3));
+    await sleep(4000);
+    const end = await page.evaluate(() => window.BD.p);
+    assert(Math.abs(end - 0.30 * 0.62) < 0.02, 'the arrow should land on the mixer hold (hp 0.30, p 0.186), p was ' + end.toFixed(3));
+    await page.screenshot({ path: path.join(OUT, 'arrow-landed.png') });
+    // a wheel event mid-tween hands the scroll back to the visitor
+    await page.evaluate(() => { window.scrollTo(0, 0); window.BD.s = 0; }); await sleep(800); // settle the overlay smoothing so the button accepts taps again
+    await page.click('#scrollbtn'); await sleep(1200);
+    await page.evaluate(() => window.dispatchEvent(new WheelEvent('wheel', { deltaY: 40 }))); await sleep(300);
+    const y1 = await page.evaluate(() => window.scrollY); await sleep(800);
+    const y2 = await page.evaluate(() => window.scrollY);
+    assert(y1 === y2 && y1 > 0, 'a wheel event should stop the tween where it is, scrollY went ' + y1 + ' -> ' + y2);
+    assert(errs.length === 0, 'arrow errors: ' + errs.join(' | '));
+  });
+
+  await step('(j) the recipe chips take the journey to their station', async (browser) => {
+    const page = await browser.newPage(); const errs = []; watch(page, errs, 'chips');
+    await page.setViewport({ width: 1280, height: 800, deviceScaleFactor: 1 }); await open(page, url); await sleep(1500);
+    const tag = await page.evaluate(() => document.querySelector('#steps [data-s="2"]').tagName);
+    assert(tag === 'BUTTON', 'the chips should be buttons, Bake was a ' + tag);
+    await page.click('#steps [data-s="2"]'); await sleep(5500);
+    const p = await page.evaluate(() => window.BD.p);
+    assert(Math.abs(p - 0.77 * 0.62) < 0.02, 'Bake should land in the oven hold (hp 0.77, p 0.477), p was ' + p.toFixed(3));
+    await page.screenshot({ path: path.join(OUT, 'chip-bake.png') });
+    assert(errs.length === 0, 'chips errors: ' + errs.join(' | '));
   });
 
   close();

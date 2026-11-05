@@ -36,14 +36,16 @@ body { background:var(--cream); color:var(--cocoa); font:400 16px/1.5 var(--body
 @keyframes bob { 0%,100% { transform:translateY(-3px); } 50% { transform:translateY(3px); } }
 /* the recipe steps: this is what replaces a clock in a bakery */
 .steps { position:absolute; right:3vw; top:76px; display:flex; align-items:center; gap:2px; padding:5px; border-radius:999px; z-index:3; animation:fadeup .7s ease-out 1.1s backwards; }
-.steps span { display:inline-flex; align-items:center; gap:6px; padding:7px 12px; border-radius:999px; font-weight:800; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--mist); transition:background .3s, color .3s; }
-.steps span.on { background:var(--cocoa); color:var(--cream); }
-.steps span.done { color:var(--cocoa); }
+/* each chip is a button: a tap takes the journey to that station (people tapped them anyway) */
+.steps button { display:inline-flex; align-items:center; gap:6px; padding:7px 12px; border-radius:999px; font-weight:800; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--mist); transition:background .3s, color .3s; }
+.steps button:hover { background:rgba(90,46,28,.1); color:var(--cocoa); }
+.steps button.on, .steps button.on:hover { background:var(--cocoa); color:var(--cream); }
+.steps button.done { color:var(--cocoa); }
 .steps i { width:13px; height:13px; border-radius:50%; border:1.5px solid currentColor; display:inline-block; }
-.steps span.done i { background:currentColor; }
+.steps button.done i { background:currentColor; }
 .steps .dial { width:15px; height:15px; border-radius:50%; background:conic-gradient(var(--butter) calc(var(--k) * 1turn), rgba(255,249,243,.25) 0); display:none; }
-.steps span.baking .dial { display:inline-block; } .steps span.baking i { display:none; }
-.steps span.baking::after { content:attr(data-t); opacity:.8; }
+.steps button.baking .dial { display:inline-block; } .steps button.baking i { display:none; }
+.steps button.baking::after { content:attr(data-t); opacity:.8; }
 .say { position:absolute; left:0; top:0; max-width:min(32ch, 74vw); padding:10px 16px 11px; border-radius:18px; background:rgba(255,249,243,.95); border:1px solid var(--glass-border); box-shadow:0 16px 34px -20px rgba(59,31,20,.55); opacity:0; will-change:transform; pointer-events:none; }
 .say::after { content:""; position:absolute; left:14px; bottom:-8px; width:14px; height:14px; background:rgba(255,249,243,.95); border-right:1px solid var(--glass-border); border-bottom:1px solid var(--glass-border); transform:rotate(45deg); }
 .say .who { display:flex; align-items:center; gap:6px; font-weight:800; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--mist); margin-bottom:1px; }
@@ -78,7 +80,7 @@ body { background:var(--cream); color:var(--cocoa); font:400 16px/1.5 var(--body
   .wm { font-size:22px; white-space:nowrap; }
   .nav .pill.wa { padding:8px 13px; font-size:12px; white-space:nowrap; } .nav .pill.wa .long { display:none; }
   .headline { bottom:14vh; }
-  .steps { top:70px; right:auto; left:50%; transform:translateX(-50%); padding:4px; } .steps span { padding:6px 9px; font-size:10px; letter-spacing:.08em; }
+  .steps { top:70px; right:auto; left:50%; transform:translateX(-50%); padding:4px; } .steps button { padding:6px 9px; font-size:10px; letter-spacing:.08em; }
   .cards { left:12px; right:12px; bottom:calc(6vh + 10px); transform:none; width:auto; gap:8px; }
   .pcard { width:auto; flex:1; grid-template-columns:1fr; padding:10px; gap:4px; }
   .pcard .jw, .pcard .arrow { display:none; }

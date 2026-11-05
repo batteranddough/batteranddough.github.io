@@ -47,7 +47,8 @@
   var kicker = document.getElementById('kicker');
   var scrollbtn = document.getElementById('scrollbtn');
   var say = document.getElementById('say'), sayText = document.getElementById('saytext'), sayLast = '';
-  var stepsEl = document.getElementById('steps'), stepEls = stepsEl.querySelectorAll('span'), dialEl = stepsEl.querySelector('.dial');
+  var stepsEl = document.getElementById('steps'), stepEls = stepsEl.querySelectorAll('button'), dialEl = stepsEl.querySelector('.dial');
+  var t0 = performance.now();
   var lastStep = -2;
   function updateSteps(hp, q) {
     var step = hp < 0.19 ? -1 : hp < 0.47 ? 0 : hp < 0.60 ? 1 : hp < 0.87 ? 2 : 3;
@@ -56,7 +57,8 @@
       Array.prototype.forEach.call(stepEls, function (el, i) { el.classList.toggle('on', i === step); el.classList.toggle('done', i < step); el.classList.toggle('baking', i === 2 && step === 2); });
     }
     if (step === 2) dialEl.style.setProperty('--k', smooth(0.745, 0.835, hp).toFixed(3));
-    stepsEl.style.opacity = 1 - smooth(0.0, 0.04, q);
+    var stepsO = 1 - smooth(0.0, 0.04, q);
+    stepsEl.style.opacity = stepsO; stepsEl.style.pointerEvents = stepsO > 0.5 ? 'auto' : 'none';
   }
 
   function updateDayOverlay(hp, q) {
@@ -91,8 +93,10 @@
 
   // ---------- Doughy's lines: typed into a bubble by his head while he holds at each station ----------
   // day lines run on hp; night lines run on q, or on u inside one showcase segment (k)
+  // the first line is the invitation to scroll: it types by itself about a second after the headline lands
+  // (intro: true), so a visitor who has not touched the page yet is told what to do; it fades by scroll like the rest
   var SAYS = [
-    { a: 0.03, b: 0.125, t: "Hi! I'm Doughy. I bake everything here. Come, watch." },
+    { a: 0.0, b: 0.125, intro: true, t: "Hi! I'm Doughy. Scroll down and watch me bake ↓" },
     { a: 0.29, b: 0.40, t: "Brown butter first. Then the chocolate. A lot of the chocolate." },
     { a: 0.49, b: 0.585, t: "Cookies, rolls, bombolone. All rolled by hand, eggless or with egg." },
     { a: 0.76, b: 0.815, t: "Twelve minutes. I won't peek. ...I peeked." },
@@ -115,6 +119,7 @@
     }
     if (!line || !h || !h.on) { say.style.opacity = 0; return; }
     var a = line.a, b = line.b, fd = line.fade || 0.012, tl = line.type || Math.min(0.045, (b - a) * 0.55);
+    if (line.intro) v = Math.max(v, a + (fd + tl) * clamp01((performance.now() - t0 - 1000) / 1600));
     var k = smooth(a, a + fd, v) * (1 - smooth(b - fd * 1.5, b, v));
     var n = Math.round(line.t.length * smooth(a, a + tl, v)), txt = line.t.slice(0, n);
     if (txt !== sayLast) { sayText.innerHTML = esc(txt) + (n < line.t.length ? '<i class="cur"></i>' : ''); sayLast = txt; }
@@ -161,9 +166,24 @@
     featEl.style.opacity = featO; featEl.style.transform = narrow ? 'translateY(' + ((1 - featO) * 20) + 'px)' : 'translateY(calc(-50% + ' + ((1 - featO) * 20) + 'px))';
     counterEl.style.opacity = featO;
   }
-  function scrollToProduct(k) { var st = F.st; if (!st) return; var p = DAY + (Q0 + k * QL + 0.45 * QL) * (1 - DAY); window.scrollTo({ top: st.start + (st.end - st.start) * p, behavior: 'smooth' }); }
+  // ---------- taking the visitor somewhere: a slow tween of the scroll position, so Doughy is seen getting there ----------
+  // about 1.1 s per viewport of distance plus 0.9 s, within 1.2 s to 4 s; any wheel, touch or key input hands the scroll back
+  var scrollTw = null;
+  function stopScroll() { if (scrollTw) { scrollTw.kill(); scrollTw = null; } }
+  function scrollJourneyTo(p) {
+    var st = F.st; if (!st) return;
+    var to = Math.round(st.start + (st.end - st.start) * p);
+    if (!window.gsap) { window.scrollTo({ top: to, behavior: 'smooth' }); return; }
+    stopScroll();
+    var o = { y: window.scrollY }, dur = Math.min(4, Math.max(1.2, 0.9 + 1.1 * Math.abs(to - o.y) / window.innerHeight));
+    scrollTw = gsap.to(o, { y: to, duration: dur, ease: 'power2.inOut', onUpdate: function () { window.scrollTo(0, o.y); }, onComplete: function () { scrollTw = null; } });
+  }
+  ['wheel', 'touchstart', 'keydown', 'pointerdown'].forEach(function (ev) { window.addEventListener(ev, stopScroll, { passive: true }); });
+  var STATION_HP = [0.30, 0.50, 0.77, 0.94]; // mix, roll, bake, box: inside each hold, where Doughy is at work
+  function scrollToProduct(k) { scrollJourneyTo(DAY + (Q0 + k * QL + 0.45 * QL) * (1 - DAY)); }
   Array.prototype.forEach.call(cardEls, function (c) { c.addEventListener('click', function (e) { if (F.st) { e.preventDefault(); scrollToProduct(+c.getAttribute('data-k')); } }); });
-  document.getElementById('scrollbtn').addEventListener('click', function () { window.scrollTo({ top: window.innerHeight * 1.2, behavior: 'smooth' }); });
+  Array.prototype.forEach.call(stepEls, function (b) { b.addEventListener('click', function () { scrollJourneyTo(STATION_HP[+b.getAttribute('data-s')] * DAY); }); });
+  document.getElementById('scrollbtn').addEventListener('click', function () { scrollJourneyTo(STATION_HP[0] * DAY); });
 
   // ---------- the single pin ----------
   var nav = document.getElementById('nav');
